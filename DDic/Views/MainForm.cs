@@ -4,6 +4,7 @@
 
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using DDic.Controllers;
@@ -36,6 +37,21 @@ namespace DDic
 
             columnBindingSource.DataSource = controller.Columns;
             GridColumns.DataSource = columnBindingSource;
+
+            {
+                // アセンブリ情報を取得
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                AssemblyName assemblyName = assembly.GetName();
+
+                // アセンブリ名とバージョンを取得
+                string appName = assemblyName.Name!;
+                Version version = assemblyName.Version!;
+                string majorVersion = version.Major.ToString();
+                string minorVersion = version.Minor.ToString();
+
+                // フォームのタイトルを設定
+                this.Text = $"{appName} - Version {majorVersion}.{minorVersion}";
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
