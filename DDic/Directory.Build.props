@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <!-- 固定のメジャー・マイナーバージョン -->
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+
+    <!-- 自動で日付と時刻を生成 -->
+    <BuildDate>$([System.DateTime]::Now.ToString("yyyyMMdd"))</BuildDate>
+    <BuildTime>$([System.DateTime]::Now.ToString("HHmm"))</BuildTime>
+
+    <!-- バージョンを構成 -->
+    <FileVersion>$(MajorVersion).$(MinorVersion).$(BuildDate).$(BuildTime)</FileVersion>
+    <AssemblyVersion>$(MajorVersion).$(MinorVersion).0.0</AssemblyVersion>
+    <InformationalVersion>$(MajorVersion).$(MinorVersion).$(BuildDate)</InformationalVersion>
+  </PropertyGroup>
+</Project>

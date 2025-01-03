@@ -1,0 +1,11 @@
+テーブルID	No	論理カラム名	物理カラム名	PK	NotNull	Type	Size	Contents
+locations	1	勤務地ID	location_id	1	1	INT	5	
+locations	2	住所	street_address			VARCHAR	100	
+locations	3	市区町村	city			VARCHAR	50	
+locations	4	都道府県	state			VARCHAR	50	
+locations	5	郵便番号	postal_code			VARCHAR	10	
+customers	1	顧客ID	customer_id	1	1	INT	6	
+customers	2	顧客名	customer_name		1	VARCHAR	100	
+customers	3	連絡先名	contact_name			VARCHAR	100	
+customers	4	メール	email			VARCHAR	100	
+customers	5	電話番号	phone			VARCHAR	20	

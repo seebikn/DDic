@@ -1,0 +1,19 @@
+テーブルID	No	論理カラム名	物理カラム名	PK	NotNull	Type	Size	Contents
+employees	1	従業員ID	employee_id	1	1	INT	11	
+employees	2	従業員の名	first_name		1	VARCHAR	50	
+employees	3	従業員の姓	last_name			VARCHAR	50	
+employees	4	従業員のメールアドレス	email			VARCHAR	100	社用メールアドレス。個人のメールアドレスを登録しないこと。
+employees	5	雇用日	hire_date		1	DATE		契約書における雇用開始日
+departments	1	部署ID	department_id	1	1	INT	4	
+departments	2	部署名	department_name		1	VARCHAR	50	
+departments	3	部署長ID	manager_id		1	INT	11	
+departments	4	勤務地ID	location_id		1	INT	5	
+projects	1	プロジェクトID	project_id	1	1	INT	6	
+projects	2	プロジェクト名	project_name		1	VARCHAR	100	
+projects	3	開始日	start_date		1	DATE		
+projects	4	終了日	end_date		1	DATE		
+projects	5	予算	budget		1	DECIMAL	10,2	
+salaries	1	給与ID	salary_id	1	1	INT	6	
+salaries	2	従業員ID	employee_id	1	1	INT	11	
+salaries	3	給与	salary		1	DECIMAL	10,2	
+salaries	4	適用日	effective_date		1	DATE		
