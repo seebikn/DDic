@@ -152,7 +152,7 @@
             LabelColumnName.Location = new Point(6, 48);
             LabelColumnName.Name = "LabelColumnName";
             LabelColumnName.Size = new Size(33, 15);
-            LabelColumnName.TabIndex = 2;
+            LabelColumnName.TabIndex = 1;
             LabelColumnName.Text = "カラム";
             // 
             // TextTableName
@@ -160,7 +160,7 @@
             TextTableName.Location = new Point(54, 16);
             TextTableName.Name = "TextTableName";
             TextTableName.Size = new Size(156, 23);
-            TextTableName.TabIndex = 1;
+            TextTableName.TabIndex = 2;
             // 
             // LabelTableName
             // 
@@ -187,7 +187,7 @@
             splitContainer1.Panel2.Controls.Add(GridColumns);
             splitContainer1.Size = new Size(1234, 524);
             splitContainer1.SplitterDistance = 350;
-            splitContainer1.TabIndex = 1;
+            splitContainer1.TabIndex = 4;
             // 
             // GridTables
             // 
@@ -213,6 +213,7 @@
             GridTables.RowHeadersVisible = false;
             GridTables.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             GridTables.Size = new Size(350, 524);
+            GridTables.StandardTab = true;
             GridTables.TabIndex = 0;
             // 
             // ProjectName
@@ -270,6 +271,7 @@
             GridColumns.ReadOnly = true;
             GridColumns.RowHeadersVisible = false;
             GridColumns.Size = new Size(880, 524);
+            GridColumns.StandardTab = true;
             GridColumns.TabIndex = 0;
             // 
             // ParentProjectName
@@ -388,7 +390,7 @@
             groupBox2.Location = new Point(673, 12);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(573, 75);
-            groupBox2.TabIndex = 8;
+            groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "テーブル概要";
             // 
@@ -399,7 +401,7 @@
             TextTableDescription.Multiline = true;
             TextTableDescription.Name = "TextTableDescription";
             TextTableDescription.Size = new Size(561, 53);
-            TextTableDescription.TabIndex = 1;
+            TextTableDescription.TabIndex = 0;
             // 
             // label1
             // 
@@ -407,7 +409,7 @@
             label1.Location = new Point(550, 60);
             label1.Name = "label1";
             label1.Size = new Size(30, 15);
-            label1.TabIndex = 9;
+            label1.TabIndex = 1;
             label1.Text = "alias";
             // 
             // TextTableAlias
@@ -415,7 +417,7 @@
             TextTableAlias.Location = new Point(586, 57);
             TextTableAlias.Name = "TextTableAlias";
             TextTableAlias.Size = new Size(58, 23);
-            TextTableAlias.TabIndex = 9;
+            TextTableAlias.TabIndex = 2;
             // 
             // MainForm
             // 
