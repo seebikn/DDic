@@ -35,6 +35,7 @@
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
             ButtonClearFiltter = new Button();
             TextColumnDetail = new TextBox();
@@ -53,11 +54,6 @@
             Description = new DataGridViewTextBoxColumn();
             MenuTables = new ContextMenuStrip(components);
             GridColumns = new DataGridView();
-            MenuColumns = new ContextMenuStrip(components);
-            groupBox2 = new GroupBox();
-            TextTableDescription = new TextBox();
-            label1 = new Label();
-            TextTableAlias = new TextBox();
             ParentProjectName = new DataGridViewTextBoxColumn();
             ParentTableID = new DataGridViewTextBoxColumn();
             ParentTableName = new DataGridViewTextBoxColumn();
@@ -69,6 +65,11 @@
             DataType = new DataGridViewTextBoxColumn();
             DataSize = new DataGridViewTextBoxColumn();
             Remarks = new DataGridViewTextBoxColumn();
+            MenuColumns = new ContextMenuStrip(components);
+            groupBox2 = new GroupBox();
+            TextTableDescription = new TextBox();
+            label1 = new Label();
+            TextTableAlias = new TextBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -151,7 +152,7 @@
             LabelColumnName.Location = new Point(6, 48);
             LabelColumnName.Name = "LabelColumnName";
             LabelColumnName.Size = new Size(33, 15);
-            LabelColumnName.TabIndex = 2;
+            LabelColumnName.TabIndex = 1;
             LabelColumnName.Text = "カラム";
             // 
             // TextTableName
@@ -159,7 +160,7 @@
             TextTableName.Location = new Point(54, 16);
             TextTableName.Name = "TextTableName";
             TextTableName.Size = new Size(156, 23);
-            TextTableName.TabIndex = 1;
+            TextTableName.TabIndex = 2;
             // 
             // LabelTableName
             // 
@@ -186,7 +187,7 @@
             splitContainer1.Panel2.Controls.Add(GridColumns);
             splitContainer1.Size = new Size(1234, 524);
             splitContainer1.SplitterDistance = 350;
-            splitContainer1.TabIndex = 1;
+            splitContainer1.TabIndex = 4;
             // 
             // GridTables
             // 
@@ -212,6 +213,7 @@
             GridTables.RowHeadersVisible = false;
             GridTables.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             GridTables.Size = new Size(350, 524);
+            GridTables.StandardTab = true;
             GridTables.TabIndex = 0;
             // 
             // ProjectName
@@ -269,48 +271,8 @@
             GridColumns.ReadOnly = true;
             GridColumns.RowHeadersVisible = false;
             GridColumns.Size = new Size(880, 524);
+            GridColumns.StandardTab = true;
             GridColumns.TabIndex = 0;
-            // 
-            // MenuColumns
-            // 
-            MenuColumns.Name = "ContextMenuStrip2";
-            MenuColumns.Size = new Size(61, 4);
-            // 
-            // groupBox2
-            // 
-            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox2.Controls.Add(TextTableDescription);
-            groupBox2.Location = new Point(673, 12);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(573, 75);
-            groupBox2.TabIndex = 8;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "テーブル概要";
-            // 
-            // TextTableDescription
-            // 
-            TextTableDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            TextTableDescription.Location = new Point(6, 16);
-            TextTableDescription.Multiline = true;
-            TextTableDescription.Name = "TextTableDescription";
-            TextTableDescription.Size = new Size(561, 53);
-            TextTableDescription.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(550, 60);
-            label1.Name = "label1";
-            label1.Size = new Size(30, 15);
-            label1.TabIndex = 9;
-            label1.Text = "alias";
-            // 
-            // TextTableAlias
-            // 
-            TextTableAlias.Location = new Point(586, 57);
-            TextTableAlias.Name = "TextTableAlias";
-            TextTableAlias.Size = new Size(58, 23);
-            TextTableAlias.TabIndex = 9;
             // 
             // ParentProjectName
             // 
@@ -416,6 +378,47 @@
             Remarks.Name = "Remarks";
             Remarks.ReadOnly = true;
             // 
+            // MenuColumns
+            // 
+            MenuColumns.Name = "ContextMenuStrip2";
+            MenuColumns.Size = new Size(61, 4);
+            // 
+            // groupBox2
+            // 
+            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox2.Controls.Add(TextTableDescription);
+            groupBox2.Location = new Point(673, 12);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(573, 75);
+            groupBox2.TabIndex = 3;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "テーブル概要";
+            // 
+            // TextTableDescription
+            // 
+            TextTableDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TextTableDescription.Location = new Point(6, 16);
+            TextTableDescription.Multiline = true;
+            TextTableDescription.Name = "TextTableDescription";
+            TextTableDescription.Size = new Size(561, 53);
+            TextTableDescription.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(550, 60);
+            label1.Name = "label1";
+            label1.Size = new Size(30, 15);
+            label1.TabIndex = 1;
+            label1.Text = "alias";
+            // 
+            // TextTableAlias
+            // 
+            TextTableAlias.Location = new Point(586, 57);
+            TextTableAlias.Name = "TextTableAlias";
+            TextTableAlias.Size = new Size(58, 23);
+            TextTableAlias.TabIndex = 2;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -426,6 +429,7 @@
             Controls.Add(groupBox2);
             Controls.Add(splitContainer1);
             Controls.Add(groupBox1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(300, 200);
             Name = "MainForm";
             Text = "Form1";
