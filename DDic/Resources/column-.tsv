@@ -2,7 +2,8 @@
 employees	1	従業員ID	employee_id	1	1	INT	11	
 employees	2	従業員の名	first_name		1	VARCHAR	50	
 employees	3	従業員の姓	last_name			VARCHAR	50	
-employees	4	従業員のメールアドレス	email			VARCHAR	100	社用メールアドレス。個人のメールアドレスを登録しないこと。
+employees	4	"従業員のメ		ー""ルアドレス"	"email"			VAR""CHAR	100	"社用メールアドレス。
+個人のメールアドレスを登録しないこと。"
 employees	5	雇用日	hire_date		1	DATE		契約書における雇用開始日
 departments	1	部署ID	department_id	1	1	INT	4	
 departments	2	部署名	department_name		1	VARCHAR	50	
