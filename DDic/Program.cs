@@ -2,6 +2,8 @@
 // Copyright (c) 2025 seebikn   
 // See LICENSE file in the project root for full license information.
 
+using DDic.Controllers;
+
 namespace DDic
 {
     internal static class Program
@@ -12,10 +14,13 @@ namespace DDic
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            var controller = new MainController();
+            controller.Run();
         }
+
     }
 }

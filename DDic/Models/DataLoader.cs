@@ -88,11 +88,5 @@ namespace DDic.Models
 
             return dataTable;
         }
-
-        private static string[] ParseTsvLine(string line)
-        {
-            // TSV行をパースするロジック (ダブルクォート対応など)
-            return line.Split('\t').Select(field => Regex.Unescape (field.Trim('"'))).ToArray();
-        }
     }
 }
