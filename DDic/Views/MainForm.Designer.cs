@@ -433,7 +433,6 @@
             MinimumSize = new Size(300, 200);
             Name = "MainForm";
             Text = "Form1";
-            Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
