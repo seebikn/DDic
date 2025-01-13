@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace DDic
 {
     public static class Constants
     {
+        // リソースフォルダ
         public static string resources = "Resources";
 
         /// <summary>
@@ -38,6 +40,46 @@ namespace DDic
             public const string DataSize = "DataSize";              // サイズ
             public const string Remarks = "Remarks";                // 備考
         }
+
+        /// <summary>
+        /// テーブル一覧の右クリックメニューを定義する構造体
+        /// </summary>
+        public static class MenuTables
+        {
+            public const string Copy = "Copy";
+            public const string CopyText = "Copy";
+        }
+
+        /// <summary>
+        /// カラム一覧の右クリックメニューを定義する構造体
+        /// </summary>
+        public static class MenuColumns
+        {
+            public const string Copy = "Copy";
+            public const string CopyText = "Copy";
+            public const string SqlSelect = "CreateSelect";
+            public const string SqlSelectText = "Select文生成";
+            public const string SqlSelectA5 = "CreateSelect(a5m2)";
+            public const string SqlSelectA5Text = "Select文生成(a5m2)";
+        }
+
+        public static class IniTableGrid
+        {
+            public const string setion = "TableGrid";
+
+            public const string copyVisible = "CopyVisible";
+        }
+
+        public static class IniColumnGrid
+        {
+            public const string setion = "ColumnGrid";
+
+            public const string copyVisible = "CopyVisible";
+            public const string createSqlVisible = "CreateSqlVisible";
+            public const string createSqlA5m2Visible = "CreateSqlSql(a5m2)Visible";
+            public const string omitSqlColumns = "OmitSqlColumns";
+        }
+
     }
 
 }
