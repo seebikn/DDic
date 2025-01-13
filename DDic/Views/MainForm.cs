@@ -22,9 +22,62 @@ namespace DDic
         public MainForm()
         {
             InitializeComponent();
+
+            // イベント追加
+            GridTables.CellBeginEdit += GridTables_CellBeginEdit;
+            GridColumns.CellBeginEdit += GridColumns_CellBeginEdit;
+            ButtonClearFiltter.Click += ButtonClearFiltter_Click;
+
+            GridTables.SelectionChanged += (s, e) => OnHandleTableSelected?.Invoke(this.GridTables, EventArgs.Empty);
+            TextTableName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
+            TextProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
+            TextColumnName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
+            TextColumnDetail.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
+
+            // DataGridViewのソート停止
+            foreach (DataGridViewColumn column in GridTables.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+            foreach (DataGridViewColumn column in GridColumns.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
+            #region " テーブル一覧　右クリックメニュー設定 "
+            // テーブル一覧
+            var tsmiTableCopy = new ToolStripMenuItem();
+            tsmiTableCopy.Name = Constants.MenuTables.Copy;
+            tsmiTableCopy.Text = Constants.MenuTables.CopyText;
+            MenuTables.Items.AddRange(new ToolStripItem[] { tsmiTableCopy });
+            MenuTables.Items[tsmiTableCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridTables, EventArgs.Empty);
+            #endregion
+
+            #region " カラム一覧　右クリックメニュー設定 "
+            // カラム一覧
+            var tsmiColumnCopy = new ToolStripMenuItem();
+            tsmiColumnCopy.Name = Constants.MenuColumns.Copy;
+            tsmiColumnCopy.Text = Constants.MenuColumns.CopyText;
+            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiColumnCopy });
+            MenuColumns.Items[tsmiColumnCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
+
+            // カラム一覧
+            var tsmiFormSelectStatement = new ToolStripMenuItem();
+            tsmiFormSelectStatement.Name = Constants.MenuColumns.SqlSelect;
+            tsmiFormSelectStatement.Text = Constants.MenuColumns.SqlSelectText;
+            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatement });
+            MenuColumns.Items[tsmiFormSelectStatement.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
+
+            // カラム一覧
+            var tsmiFormSelectStatementA5 = new ToolStripMenuItem();
+            tsmiFormSelectStatementA5.Name = Constants.MenuColumns.SqlSelectA5;
+            tsmiFormSelectStatementA5.Text = Constants.MenuColumns.SqlSelectA5Text;
+            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatementA5 });
+            MenuColumns.Items[tsmiFormSelectStatementA5.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboardA5?.Invoke(this.GridColumns, EventArgs.Empty);
+            #endregion
         }
 
-        #region " 単純なデータ受け渡し "
+        #region " コントローラー用 set/get "
         public void SetDataSource(BindingSource table, BindingSource columns)
         {
             GridTables.DataSource = table;
@@ -60,67 +113,18 @@ namespace DDic
         {
             return TextTableAlias.Text;
         }
-        #endregion
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void SetMenuTablesVisible(string name, bool value)
         {
-            // イベント追加
-            GridTables.CellBeginEdit += GridTables_CellBeginEdit;
-            GridColumns.CellBeginEdit += GridColumns_CellBeginEdit;
-            ButtonClearFiltter.Click += ButtonClearFiltter_Click;
-
-            GridTables.SelectionChanged += (s, e) => OnHandleTableSelected?.Invoke(this.GridTables, EventArgs.Empty);
-            TextTableName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextColumnName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextColumnDetail.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-
-            // DataGridViewのソート停止
-            foreach (DataGridViewColumn column in GridTables.Columns)
-            {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-            foreach (DataGridViewColumn column in GridColumns.Columns)
-            {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-
-            #region " ToolStripMenu コピー "
-            // テーブル一覧
-            var tsmiTableCopy = new ToolStripMenuItem();
-            tsmiTableCopy.Name = "Copy";
-            tsmiTableCopy.Text = "コピー";
-            MenuTables.Items.AddRange(new ToolStripItem[] { tsmiTableCopy });
-            MenuTables.Items[tsmiTableCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridTables, EventArgs.Empty);
-
-            // カラム一覧
-            var tsmiColumnCopy = new ToolStripMenuItem();
-            tsmiColumnCopy.Name = "Copy";
-            tsmiColumnCopy.Text = "コピー";
-            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiColumnCopy });
-            MenuColumns.Items[tsmiColumnCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
-            #endregion
-
-            #region " ToolStripMenu Select文 "
-            // カラム一覧
-            var tsmiFormSelectStatement = new ToolStripMenuItem();
-            tsmiFormSelectStatement.Name = "SelectStatement";
-            tsmiFormSelectStatement.Text = "Select句作成";
-            //tsmiColumnSelectStatement.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D;
-            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatement });
-            MenuColumns.Items[tsmiFormSelectStatement.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
-            #endregion
-
-            #region " ToolStripMenu Select文(a5m2) "
-            // カラム一覧
-            var tsmiFormSelectStatementA5 = new ToolStripMenuItem();
-            tsmiFormSelectStatementA5.Name = "SelectStatement-a5m2";
-            tsmiFormSelectStatementA5.Text = "Select句作成(a5m2)";
-            MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatementA5 });
-            MenuColumns.Items[tsmiFormSelectStatementA5.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboardA5?.Invoke(this.GridColumns, EventArgs.Empty);
-            #endregion
-
+            MenuTables.Items[name]!.Visible = value;
         }
+
+        public void SetMenuColumnsVisible(string name, bool value)
+        {
+            MenuColumns.Items[name]!.Visible = value;
+        }
+
+        #endregion
 
         private void GridTables_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
         {

@@ -13,10 +13,11 @@ namespace DDic.Controllers
     internal class MainController
     {
         private MainForm view;
+        private IniController iniController;
         private BindingSource tableBindingSource = new BindingSource();
         private BindingSource columnBindingSource = new BindingSource();
 
-        public MainController()
+        public MainController(string iniFilePath)
         {
             view = new MainForm();
             view.OnHandleTableSelected += HandleTableSelected;
@@ -24,6 +25,8 @@ namespace DDic.Controllers
             view.OnHandleHandleSelectionDataToClipboard += HandleSelectionDataToClipboard;
             view.OnHandleSelectStatementToClipboard += HandleSelectStatementToClipboard;
             view.OnHandleSelectStatementToClipboardA5 += HandleSelectStatementToClipboardA5;
+
+            iniController = new IniController(iniFilePath);
         }
 
         public void Run()
@@ -39,6 +42,10 @@ namespace DDic.Controllers
 
                 // フォームのタイトルを設定
                 view.Text = $"{appName} - Version {majorVersion}.{minorVersion}";
+            }
+            {
+                // iniファイルを読み込み
+                this.LoadSettings();
             }
             {
                 // tsvファイルからテーブル一覧、カラム一覧を読み込み、viewに設定
@@ -87,6 +94,23 @@ namespace DDic.Controllers
                     return fileName == baseName ? " " : fileName.Replace($"{baseName}", "");
                 }
             }
+        }
+
+        private void LoadSettings()
+        {
+            iniController.InitializeFile();
+
+            // テーブル一覧 右クリックメニューの表示設定
+            view.SetMenuTablesVisible(Constants.MenuTables.Copy, 
+                (iniController.GetSetting(Constants.IniTableGrid.setion, Constants.IniTableGrid.copyVisible) == "1"));
+
+            // カラム一覧 右クリックメニューの表示設定
+            view.SetMenuColumnsVisible(Constants.MenuColumns.Copy, 
+                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.copyVisible) == "1"));            
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect, 
+                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlVisible) == "1"));
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5, 
+                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlA5m2Visible) == "1"));
         }
 
         #region " テーブル一覧で選択 "
@@ -209,12 +233,21 @@ namespace DDic.Controllers
             var tableId = grid.CurrentRow.Cells[Constants.ColumnColumns.TableID].Value.ToString() ?? String.Empty;
             var tableName = grid.CurrentRow.Cells[Constants.ColumnColumns.TableName].Value.ToString() ?? String.Empty;
             var tableAlias = view.GetTextTableAliasValue().Trim();
+            var omitColumns = GetOmitSqlColumns();
+
+            // SQLのSelect句から除外する列名
+            string[] GetOmitSqlColumns()
+            {
+                string columns = iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.omitSqlColumns);
+                return columns.Split(',');
+            }
 
             // カラム一覧の物理名と論理名を取得
             var columns = grid.Rows
                 .Cast<DataGridViewRow>()
                 .Where(row => row.Cells[Constants.ColumnColumns.ProjectName].Value?.ToString() == projectName
                     && row.Cells[Constants.ColumnColumns.TableID].Value?.ToString() == tableId)
+                .Where(row => !omitColumns.Contains(row.Cells[Constants.ColumnColumns.PhysicalName].Value?.ToString()))
                 .Select(row => new
                 {
                     PhysicalName = row.Cells[Constants.ColumnColumns.PhysicalName].Value?.ToString() ?? String.Empty,

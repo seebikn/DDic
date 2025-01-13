@@ -18,7 +18,10 @@ namespace DDic
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var controller = new MainController();
+            string exePath = AppDomain.CurrentDomain.BaseDirectory;
+            string iniFilePath = Path.Combine(exePath, "Resources", "config.ini");
+
+            var controller = new MainController(iniFilePath);
             controller.Run();
         }
 
