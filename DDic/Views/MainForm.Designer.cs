@@ -47,13 +47,13 @@
             TextTableName = new TextBox();
             LabelTableName = new Label();
             splitContainer1 = new SplitContainer();
-            GridTables = new DataGridView();
+            GridTables = new DoubleBufferedDataGridView();
             ProjectName = new DataGridViewTextBoxColumn();
             TableID = new DataGridViewTextBoxColumn();
             TableName = new DataGridViewTextBoxColumn();
             Description = new DataGridViewTextBoxColumn();
             MenuTables = new ContextMenuStrip(components);
-            GridColumns = new DataGridView();
+            GridColumns = new DoubleBufferedDataGridView();
             ParentProjectName = new DataGridViewTextBoxColumn();
             ParentTableID = new DataGridViewTextBoxColumn();
             ParentTableName = new DataGridViewTextBoxColumn();
