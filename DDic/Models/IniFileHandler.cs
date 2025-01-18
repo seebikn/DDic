@@ -28,9 +28,9 @@ namespace DDic.Models
             return result.ToString();
         }
 
-        public void WriteValue(string section, string key, string value)
+        public void WriteValue(string section, string key, string? value)
         {
-            WritePrivateProfileString(section, key, value, filePath);
+            WritePrivateProfileString(section, key, value??"", filePath);
         }
 
         public bool FileExists()
