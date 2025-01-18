@@ -101,15 +101,15 @@ namespace DDic.Controllers
 
             // テーブル一覧 右クリックメニューの表示設定
             view.SetMenuTablesVisible(Constants.MenuTables.Copy, 
-                (iniController.Get(Constants.IniTableGrid.setion, Constants.IniTableGrid.copyVisible, 1) == 1));
+                iniController.Get(Constants.IniTableGrid.section, Constants.IniTableGrid.copyVisible, true));
 
             // カラム一覧 右クリックメニューの表示設定
             view.SetMenuColumnsVisible(Constants.MenuColumns.Copy, 
-                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.copyVisible, 1) == 1));            
+                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.copyVisible, true));            
             view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect, 
-                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlVisible, 1) == 1));
+                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlVisible, true));
             view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5, 
-                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlA5m2Visible, 1) == 1));
+                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlA5m2Visible, true));
         }
 
         #region " テーブル一覧で選択 "
@@ -237,7 +237,7 @@ namespace DDic.Controllers
             // SQLのSelect句から除外する列名
             string[] GetOmitSqlColumns()
             {
-                string columns = iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.omitSqlColumns, String.Empty);
+                string columns = iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.omitSqlColumns, String.Empty);
                 return columns.Split(',');
             }
 
@@ -290,33 +290,38 @@ namespace DDic.Controllers
         private void HandleSaveWindowSettings(object? sender, EventArgs e)
         {
             // viewの位置とサイズを保存
-            iniController.Set("Window", "X", view.Location.X);
-            iniController.Set("Window", "Y", view.Location.Y);
-            iniController.Set("Window", "Width", view.Width);
-            iniController.Set("Window", "Height", view.Height);
-            iniController.Set("Window", "Maximized", view.WindowState == FormWindowState.Maximized);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.x, view.Location.X);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.y, view.Location.Y);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
         }
 
         private void HandleSaveGridSettings(object? sender, EventArgs e)
         {
-            HandleSaveGridTableSettingsCommon(sender, e, view.GetGridTables());
-            HandleSaveGridTableSettingsCommon(sender, e, view.GetGridColumns());
+            SaveGridTableSettingsCommon(sender, e, view.GetGridTables(), Constants.IniTableGrid.section);
+            SaveGridTableSettingsCommon(sender, e, view.GetGridColumns(), Constants.IniColumnGrid.section);
         }
 
-        private void HandleSaveGridTableSettingsCommon(object? sender, EventArgs e, DataGridView view)
+        private void SaveGridTableSettingsCommon(object? sender, EventArgs e, DataGridView view, string baseSection)
         {
             foreach (DataGridViewColumn column in view.Columns)
             {
-                iniController.Set(view.Name, $"{column.Name}_Index", column.DisplayIndex);
-                iniController.Set(view.Name, $"{column.Name}_Visible", column.Visible?1:0);
+                string section = baseSection + Constants.IniGridSetting.addSection;
+                string indexKey = $"{column.Name}{Constants.IniGridSetting.index}";
+                string visibleKey = $"{column.Name}{Constants.IniGridSetting.visible}";
+                string widthKey = $"{column.Name}{Constants.IniGridSetting.width}";
+
+                iniController.Set(section, indexKey, column.DisplayIndex);
+                iniController.Set(section, visibleKey, column.Visible);
 
                 if (column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill)
                 {
-                    iniController.Set(view.Name, $"{column.Name}_Width", -1);
+                    iniController.Set(section, widthKey, -1);
                 }
                 else
                 {
-                    iniController.Set(view.Name, $"{column.Name}_Width", column.Width);
+                    iniController.Set(section, widthKey, column.Width);
                 }
             }
         }
@@ -326,15 +331,15 @@ namespace DDic.Controllers
         private void HandleRestoreWindowSettings(object? sender, EventArgs e)
         {
             // viewの位置とサイズ
-            int x = iniController.Get("Window", "X", 50);
-            int y = iniController.Get("Window", "Y", 50);
-            int width = iniController.Get("Window", "Width", 1274);
-            int height = iniController.Get("Window", "Height", 668);
-            bool isMaximized = iniController.Get("Window", "Maximized", false);
+            int x = iniController.Get(Constants.IniMain.section, Constants.IniMain.x, 50);
+            int y = iniController.Get(Constants.IniMain.section, Constants.IniMain.y, 50);
+            int width = iniController.Get(Constants.IniMain.section, Constants.IniMain.width, 1274);
+            int height = iniController.Get(Constants.IniMain.section, Constants.IniMain.height, 668);
+            bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
 
             if (isMaximized)
             {
-                // viewの最大化
+                // 最大化
                 view.WindowState = FormWindowState.Maximized;
             } 
             else
@@ -347,22 +352,27 @@ namespace DDic.Controllers
 
         private void HandleRestoreGridSettings(object? sender, EventArgs e)
         {
-            HandleRestoreGridSettingsCommon(sender, e, view.GetGridTables());
-            HandleRestoreGridSettingsCommon(sender, e, view.GetGridColumns());
+            RestoreGridSettingsCommon(sender, e, view.GetGridTables(), Constants.IniTableGrid.section);
+            RestoreGridSettingsCommon(sender, e, view.GetGridColumns(), Constants.IniColumnGrid.section);
         }
 
-        private void HandleRestoreGridSettingsCommon(object? sender, EventArgs e, DataGridView view)
+        private void RestoreGridSettingsCommon(object? sender, EventArgs e, DataGridView view, string baseSection)
         {
             for (int i = 0; i < view.Columns.Count; i++)
             {
                 var column = view.Columns[i];
-                int index = iniController.Get(view.Name, $"{column.Name}_Index", i);
-                int visible = iniController.Get(view.Name, $"{column.Name}_Visible", 1);
-                int width = iniController.Get(view.Name, $"{column.Name}_Width", column.Width);
+                string section = baseSection + Constants.IniGridSetting.addSection;
+                string indexKey = $"{column.Name}{Constants.IniGridSetting.index}";
+                string visibleKey = $"{column.Name}{Constants.IniGridSetting.visible}";
+                string widthKey = $"{column.Name}{Constants.IniGridSetting.width}";
+
+                int index = iniController.Get(section, indexKey, column.Index);
+                bool visible = iniController.Get(section, visibleKey, column.Visible);
+                int width = iniController.Get(section, widthKey, column.Width);
 
                 column.DisplayIndex = index;
-                column.Visible = visible==1 ? true: false;
-
+                column.Visible = visible;
+        
                 if (width == -1)
                 {
                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
