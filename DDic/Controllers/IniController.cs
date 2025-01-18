@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDic.Models;
+﻿using DDic.Models;
 
 namespace DDic.Controllers
 {
@@ -15,6 +10,7 @@ namespace DDic.Controllers
         {
             iniFileHandler = new IniFileHandler(iniFilePath);
         }
+
         public void InitializeFile()
         {
             if (!iniFileHandler.FileExists())
@@ -23,15 +19,37 @@ namespace DDic.Controllers
             }
         }
 
-        public string GetSetting(string section, string key)
+        private string Get(string section, string key)
         {
             return iniFileHandler.ReadValue(section, key);
         }
 
-        public void SetSetting(string section, string key, string value)
+        private void Set(string section, string key, string? value)
         {
             iniFileHandler.WriteValue(section, key, value);
         }
 
+        public T Get<T>(string section, string key, T defaultValue = default!)
+        {
+            string value = Get(section, key);
+            if (string.IsNullOrEmpty(value))
+            {
+                return defaultValue;
+            }
+
+            try
+            {
+                return (T)Convert.ChangeType(value, typeof(T));
+            }
+            catch
+            {
+                return defaultValue; // 変換失敗時はデフォルト値を返す
+            }
+        }
+
+        public void Set<T>(string section, string key, T value)
+        {
+            Set(section, key, value?.ToString());
+        }
     }
 }

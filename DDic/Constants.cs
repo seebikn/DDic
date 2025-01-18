@@ -63,16 +63,22 @@ namespace DDic
             public const string SqlSelectA5Text = "Select文生成(a5m2)";
         }
 
+        /// <summary>
+        /// テーブル一覧の右クリック設定(config.ini)
+        /// </summary>
         public static class IniTableGrid
         {
-            public const string setion = "TableGrid";
+            public const string section = "TableGrid";
 
             public const string copyVisible = "CopyVisible";
         }
 
+        /// <summary>
+        /// カラム一覧の右クリック設定(config.ini)
+        /// </summary>
         public static class IniColumnGrid
         {
-            public const string setion = "ColumnGrid";
+            public const string section = "ColumnGrid";
 
             public const string copyVisible = "CopyVisible";
             public const string createSqlVisible = "CreateSqlVisible";
@@ -80,6 +86,31 @@ namespace DDic
             public const string omitSqlColumns = "OmitSqlColumns";
         }
 
+        /// <summary>
+        /// ウィンドウの表示設定(config.ini)
+        /// </summary>
+        public static class IniMain
+        {
+            public const string section = "Window_Setting";
+            public const string x = "X";
+            public const string y = "Y";
+            public const string width = "Width";
+            public const string height = "Height";
+            public const string maximized = "Maximized";
+
+        }
+
+        /// <summary>
+        /// 一覧の表示設定(config.ini)
+        /// </summary>
+        public static class IniGridSetting
+        {
+            public const string addSection = "_Setting";
+
+            public const string index = "_Index";
+            public const string visible = "_Visible";
+            public const string width = "_Width";
+        }
     }
 
 }
