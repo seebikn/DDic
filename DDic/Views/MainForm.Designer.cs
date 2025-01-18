@@ -451,8 +451,6 @@
 
         private GroupBox groupBox1;
         private SplitContainer splitContainer1;
-        private DataGridView GridTables;
-        private DataGridView GridColumns;
         private Label LabelTableName;
         private TextBox TextTableName;
         private Label LabelColumnName;
@@ -483,5 +481,7 @@
         private DataGridViewTextBoxColumn DataType;
         private DataGridViewTextBoxColumn DataSize;
         private DataGridViewTextBoxColumn Remarks;
+        private DoubleBufferedDataGridView GridTables;
+        private DoubleBufferedDataGridView GridColumns;
     }
 }

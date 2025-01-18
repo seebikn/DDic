@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using DDic.Models;
 
 namespace DDic.Controllers
@@ -25,6 +20,10 @@ namespace DDic.Controllers
             view.OnHandleHandleSelectionDataToClipboard += HandleSelectionDataToClipboard;
             view.OnHandleSelectStatementToClipboard += HandleSelectStatementToClipboard;
             view.OnHandleSelectStatementToClipboardA5 += HandleSelectStatementToClipboardA5;
+            view.FormClosing += HandleSaveWindowSettings;
+            view.FormClosing += HandleSaveGridSettings;
+            view.Load += HandleRestoreWindowSettings;
+            view.Load += HandleRestoreGridSettings;
 
             iniController = new IniController(iniFilePath);
         }
@@ -102,15 +101,15 @@ namespace DDic.Controllers
 
             // テーブル一覧 右クリックメニューの表示設定
             view.SetMenuTablesVisible(Constants.MenuTables.Copy, 
-                (iniController.GetSetting(Constants.IniTableGrid.setion, Constants.IniTableGrid.copyVisible) == "1"));
+                (iniController.Get(Constants.IniTableGrid.setion, Constants.IniTableGrid.copyVisible, 1) == 1));
 
             // カラム一覧 右クリックメニューの表示設定
             view.SetMenuColumnsVisible(Constants.MenuColumns.Copy, 
-                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.copyVisible) == "1"));            
+                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.copyVisible, 1) == 1));            
             view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect, 
-                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlVisible) == "1"));
+                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlVisible, 1) == 1));
             view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5, 
-                (iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlA5m2Visible) == "1"));
+                (iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.createSqlA5m2Visible, 1) == 1));
         }
 
         #region " テーブル一覧で選択 "
@@ -238,7 +237,7 @@ namespace DDic.Controllers
             // SQLのSelect句から除外する列名
             string[] GetOmitSqlColumns()
             {
-                string columns = iniController.GetSetting(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.omitSqlColumns);
+                string columns = iniController.Get(Constants.IniColumnGrid.setion, Constants.IniColumnGrid.omitSqlColumns, String.Empty);
                 return columns.Split(',');
             }
 
@@ -284,6 +283,95 @@ namespace DDic.Controllers
 
             // クリップボードにコピー
             Clipboard.SetText(selectStatement.ToString());
+        }
+        #endregion
+
+        #region " ウィンドウサイズ・位置の保存 "
+        private void HandleSaveWindowSettings(object? sender, EventArgs e)
+        {
+            // viewの位置とサイズを保存
+            iniController.Set("Window", "X", view.Location.X);
+            iniController.Set("Window", "Y", view.Location.Y);
+            iniController.Set("Window", "Width", view.Width);
+            iniController.Set("Window", "Height", view.Height);
+            iniController.Set("Window", "Maximized", view.WindowState == FormWindowState.Maximized);
+        }
+
+        private void HandleSaveGridSettings(object? sender, EventArgs e)
+        {
+            HandleSaveGridTableSettingsCommon(sender, e, view.GetGridTables());
+            HandleSaveGridTableSettingsCommon(sender, e, view.GetGridColumns());
+        }
+
+        private void HandleSaveGridTableSettingsCommon(object? sender, EventArgs e, DataGridView view)
+        {
+            foreach (DataGridViewColumn column in view.Columns)
+            {
+                iniController.Set(view.Name, $"{column.Name}_Index", column.DisplayIndex);
+                iniController.Set(view.Name, $"{column.Name}_Visible", column.Visible?1:0);
+
+                if (column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill)
+                {
+                    iniController.Set(view.Name, $"{column.Name}_Width", -1);
+                }
+                else
+                {
+                    iniController.Set(view.Name, $"{column.Name}_Width", column.Width);
+                }
+            }
+        }
+        #endregion
+
+        #region " ウィンドウサイズ・位置の読込 "
+        private void HandleRestoreWindowSettings(object? sender, EventArgs e)
+        {
+            // viewの位置とサイズ
+            int x = iniController.Get("Window", "X", 50);
+            int y = iniController.Get("Window", "Y", 50);
+            int width = iniController.Get("Window", "Width", 1274);
+            int height = iniController.Get("Window", "Height", 668);
+            bool isMaximized = iniController.Get("Window", "Maximized", false);
+
+            if (isMaximized)
+            {
+                // viewの最大化
+                view.WindowState = FormWindowState.Maximized;
+            } 
+            else
+            {
+                view.StartPosition = FormStartPosition.Manual;
+                view.Location = new System.Drawing.Point(x, y);
+                view.Size = new System.Drawing.Size(width, height);
+            }
+        }
+
+        private void HandleRestoreGridSettings(object? sender, EventArgs e)
+        {
+            HandleRestoreGridSettingsCommon(sender, e, view.GetGridTables());
+            HandleRestoreGridSettingsCommon(sender, e, view.GetGridColumns());
+        }
+
+        private void HandleRestoreGridSettingsCommon(object? sender, EventArgs e, DataGridView view)
+        {
+            for (int i = 0; i < view.Columns.Count; i++)
+            {
+                var column = view.Columns[i];
+                int index = iniController.Get(view.Name, $"{column.Name}_Index", i);
+                int visible = iniController.Get(view.Name, $"{column.Name}_Visible", 1);
+                int width = iniController.Get(view.Name, $"{column.Name}_Width", column.Width);
+
+                column.DisplayIndex = index;
+                column.Visible = visible==1 ? true: false;
+
+                if (width == -1)
+                {
+                    column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
+                else
+                {
+                    column.Width = width;
+                }
+            }
         }
         #endregion
 

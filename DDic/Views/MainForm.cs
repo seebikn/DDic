@@ -2,13 +2,6 @@
 // Copyright (c) 2025 seebikn   
 // See LICENSE file in the project root for full license information.
 
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Windows.Forms;
-using DDic.Controllers;
-
 namespace DDic
 {
     public partial class MainForm : Form
@@ -78,6 +71,10 @@ namespace DDic
         }
 
         #region " コントローラー用 set/get "
+        public DataGridView GetGridTables() { return this.GridTables; }
+
+        public DataGridView GetGridColumns() { return this.GridColumns; }
+
         public void SetDataSource(BindingSource table, BindingSource columns)
         {
             GridTables.DataSource = table;
@@ -143,6 +140,5 @@ namespace DDic
             TextColumnName.Text = string.Empty;
             TextColumnDetail.Text = string.Empty;
         }
-
     }
 }
