@@ -138,10 +138,10 @@ namespace DDic.Controllers
         #region " 検索 "
         private void HandleApplyFilters(object? sender, EventArgs e)
         {
-            var projectName = view.GetTextProjectNameValue().Trim();
+            var projectName = view.GetTextProjectNameValue();
             var tableName = view.GetTextTableNameValue().Trim();
             var columnName = view.GetTextColumnNameValue().Trim();
-            var columnDetail = view.GetTextColumnDetailValue().Trim();
+            var columnDetail = view.GetTextColumnDetailValue();
 
             List<string> searchTable = new List<string>();
             List<string> searchColumn = new List<string>();
