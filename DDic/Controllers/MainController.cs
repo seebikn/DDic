@@ -232,13 +232,21 @@ namespace DDic.Controllers
             var tableId = grid.CurrentRow.Cells[Constants.ColumnColumns.TableID].Value.ToString() ?? String.Empty;
             var tableName = grid.CurrentRow.Cells[Constants.ColumnColumns.TableName].Value.ToString() ?? String.Empty;
             var tableAlias = view.GetTextTableAliasValue().Trim();
-            var omitColumns = GetOmitSqlColumns();
 
             // SQLのSelect句から除外する列名
+            string[] omitColumns = [];
             string[] GetOmitSqlColumns()
             {
                 string columns = iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.omitSqlColumns, String.Empty);
                 return columns.Split(',');
+            }
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                // shiftを押している場合は除外しない
+            }
+            else
+            {
+                omitColumns = GetOmitSqlColumns();
             }
 
             // カラム一覧の物理名と論理名を取得
