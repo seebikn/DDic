@@ -295,6 +295,7 @@ namespace DDic.Controllers
             iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.splitDistance, view.SplitterDistance);
         }
 
         private void HandleSaveGridSettings(object? sender, EventArgs e)
@@ -335,7 +336,10 @@ namespace DDic.Controllers
             int y = iniController.Get(Constants.IniMain.section, Constants.IniMain.y, 50);
             int width = iniController.Get(Constants.IniMain.section, Constants.IniMain.width, 1274);
             int height = iniController.Get(Constants.IniMain.section, Constants.IniMain.height, 668);
+            int splitDistance = iniController.Get(Constants.IniMain.section, Constants.IniMain.splitDistance, 350);
             bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
+
+            view.SplitterDistance = splitDistance;
 
             if (isMaximized)
             {

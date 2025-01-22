@@ -121,6 +121,13 @@ namespace DDic
             MenuColumns.Items[name]!.Visible = value;
         }
 
+        public int SplitterDistance
+        {
+            get => splitContainer1.SplitterDistance;
+            set => splitContainer1.SplitterDistance = value;
+        }
+
+
         #endregion
 
         private void GridTables_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
