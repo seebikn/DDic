@@ -97,7 +97,7 @@ namespace DDic
             public const string width = "Width";
             public const string height = "Height";
             public const string maximized = "Maximized";
-
+            public const string splitDistance = "SplitDistance";
         }
 
         /// <summary>
