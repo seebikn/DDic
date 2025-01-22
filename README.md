@@ -38,5 +38,9 @@
    - Select文作成時に除外するカラム名の指定
 4. DDic.exeを起動し、いい感じに使います。
 
+## その他
+- 右クリックからコピーの際、shiftを押していると行列入れ替えてコピー
+- 右クリックからSelect文を作る際、shiftを押していると列除外なしでコピー
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

@@ -48,23 +48,29 @@ namespace DDic
 
             #region " カラム一覧　右クリックメニュー設定 "
             // カラム一覧
-            var tsmiColumnCopy = new ToolStripMenuItem();
-            tsmiColumnCopy.Name = Constants.MenuColumns.Copy;
-            tsmiColumnCopy.Text = Constants.MenuColumns.CopyText;
+            var tsmiColumnCopy = new ToolStripMenuItem
+            {
+                Name = Constants.MenuColumns.Copy,
+                Text = Constants.MenuColumns.CopyText,
+            };
             MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiColumnCopy });
             MenuColumns.Items[tsmiColumnCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
 
             // カラム一覧
-            var tsmiFormSelectStatement = new ToolStripMenuItem();
-            tsmiFormSelectStatement.Name = Constants.MenuColumns.SqlSelect;
-            tsmiFormSelectStatement.Text = Constants.MenuColumns.SqlSelectText;
+            var tsmiFormSelectStatement = new ToolStripMenuItem
+            {
+                Name = Constants.MenuColumns.SqlSelect,
+                Text = Constants.MenuColumns.SqlSelectText,
+            };
             MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatement });
             MenuColumns.Items[tsmiFormSelectStatement.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboard?.Invoke(this.GridColumns, EventArgs.Empty);
 
             // カラム一覧
-            var tsmiFormSelectStatementA5 = new ToolStripMenuItem();
-            tsmiFormSelectStatementA5.Name = Constants.MenuColumns.SqlSelectA5;
-            tsmiFormSelectStatementA5.Text = Constants.MenuColumns.SqlSelectA5Text;
+            var tsmiFormSelectStatementA5 = new ToolStripMenuItem
+            {
+                Name = Constants.MenuColumns.SqlSelectA5,
+                Text = Constants.MenuColumns.SqlSelectA5Text,
+            };
             MenuColumns.Items.AddRange(new ToolStripItem[] { tsmiFormSelectStatementA5 });
             MenuColumns.Items[tsmiFormSelectStatementA5.Name]!.Click += (s, e) => OnHandleSelectStatementToClipboardA5?.Invoke(this.GridColumns, EventArgs.Empty);
             #endregion

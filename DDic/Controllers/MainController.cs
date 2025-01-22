@@ -199,6 +199,14 @@ namespace DDic.Controllers
                             .ToList()
                 );
 
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                // shiftを押している場合は縦横を入れ替える
+                groupedRows = Enumerable.Range(0, groupedRows.Max(row => row.Count))
+                        .Select(colIndex => groupedRows.Select(row => colIndex < row.Count ? row[colIndex] : "").ToList()
+                    ).ToList();
+            }
+
             // 行ごとにタブ区切り、全体を改行区切りで結合
             var clipboardText = string.Join(
                 Environment.NewLine,
