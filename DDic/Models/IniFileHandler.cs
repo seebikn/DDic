@@ -23,8 +23,8 @@ namespace DDic.Models
 
         public string ReadValue(string section, string key)
         {
-            StringBuilder result = new StringBuilder(255);
-            GetPrivateProfileString(section, key, "", result, 255, filePath);
+            StringBuilder result = new StringBuilder(2048);
+            GetPrivateProfileString(section, key, "", result, result.Capacity, filePath);
             return result.ToString();
         }
 
