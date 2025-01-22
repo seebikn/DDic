@@ -138,10 +138,10 @@ namespace DDic.Controllers
         #region " 検索 "
         private void HandleApplyFilters(object? sender, EventArgs e)
         {
-            var projectName = view.GetTextProjectNameValue().Trim();
+            var projectName = view.GetTextProjectNameValue();
             var tableName = view.GetTextTableNameValue().Trim();
             var columnName = view.GetTextColumnNameValue().Trim();
-            var columnDetail = view.GetTextColumnDetailValue().Trim();
+            var columnDetail = view.GetTextColumnDetailValue();
 
             List<string> searchTable = new List<string>();
             List<string> searchColumn = new List<string>();
@@ -199,6 +199,14 @@ namespace DDic.Controllers
                             .ToList()
                 );
 
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                // shiftを押している場合は縦横を入れ替える
+                groupedRows = Enumerable.Range(0, groupedRows.Max(row => row.Count))
+                        .Select(colIndex => groupedRows.Select(row => colIndex < row.Count ? row[colIndex] : "").ToList()
+                    ).ToList();
+            }
+
             // 行ごとにタブ区切り、全体を改行区切りで結合
             var clipboardText = string.Join(
                 Environment.NewLine,
@@ -232,13 +240,21 @@ namespace DDic.Controllers
             var tableId = grid.CurrentRow.Cells[Constants.ColumnColumns.TableID].Value.ToString() ?? String.Empty;
             var tableName = grid.CurrentRow.Cells[Constants.ColumnColumns.TableName].Value.ToString() ?? String.Empty;
             var tableAlias = view.GetTextTableAliasValue().Trim();
-            var omitColumns = GetOmitSqlColumns();
 
             // SQLのSelect句から除外する列名
+            string[] omitColumns = [];
             string[] GetOmitSqlColumns()
             {
                 string columns = iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.omitSqlColumns, String.Empty);
                 return columns.Split(',');
+            }
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                // shiftを押している場合は除外しない
+            }
+            else
+            {
+                omitColumns = GetOmitSqlColumns();
             }
 
             // カラム一覧の物理名と論理名を取得
@@ -295,6 +311,7 @@ namespace DDic.Controllers
             iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.splitDistance, view.SplitterDistance);
         }
 
         private void HandleSaveGridSettings(object? sender, EventArgs e)
@@ -335,7 +352,10 @@ namespace DDic.Controllers
             int y = iniController.Get(Constants.IniMain.section, Constants.IniMain.y, 50);
             int width = iniController.Get(Constants.IniMain.section, Constants.IniMain.width, 1274);
             int height = iniController.Get(Constants.IniMain.section, Constants.IniMain.height, 668);
+            int splitDistance = iniController.Get(Constants.IniMain.section, Constants.IniMain.splitDistance, 350);
             bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
+
+            view.SplitterDistance = splitDistance;
 
             if (isMaximized)
             {

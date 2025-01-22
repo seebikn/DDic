@@ -18,7 +18,7 @@ namespace DDic.Models
             var lines = TsvReader.ReadFile(filePath, 3);
             foreach (var line in lines)
             {
-                var data = line.Select(x => x.Replace("¥t", "↹")).ToArray();
+                var data = line.Select(x => x.Replace("¥t", "    ")).ToArray();
 
                 // DataTableに行を追加
                 var row = dataTable.NewRow();
@@ -53,7 +53,7 @@ namespace DDic.Models
             var lines = TsvReader.ReadFile(filePath, 9);
             foreach (var line in lines)
             {
-                var data = line.Select(x => x.Replace("\t", "    a")).ToArray();
+                var data = line.Select(x => x.Replace("\t", "    ")).ToArray();
 
                 var tableName = parent.AsEnumerable()
                     .Where(x => x[Constants.TableColumns.ProjectName].Equals(projectName))
