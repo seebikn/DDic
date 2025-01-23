@@ -25,12 +25,12 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: パブリッシュ
-        run: dotnet publish --configuration Release --output ./publish
+        run: dotnet publish --configuration Release
 
       - name: リリース用アーティファクトの作成
         run: |
           mkdir release
-          cp -r ./publish/* ./release/
+          cp -r ./DDic/bin/Release/net8.0-windows/* ./release/
           cp README.md ./release/
           cp LICENSE ./release/
           cp -r ./image ./release/image
