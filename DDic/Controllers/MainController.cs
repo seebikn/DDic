@@ -16,6 +16,7 @@ namespace DDic.Controllers
         {
             view = new MainForm();
             view.OnHandleTableSelected += HandleTableSelected;
+            view.OnHandleColumnDoubleClick += HandleColumnDoubleClick;
             view.OnHandleApplyFilters += HandleApplyFilters;
             view.OnHandleHandleSelectionDataToClipboard += HandleSelectionDataToClipboard;
             view.OnHandleSelectStatementToClipboard += HandleSelectStatementToClipboard;
@@ -51,7 +52,7 @@ namespace DDic.Controllers
                 this.LoadTables();
             }
 
-            Application.Run(view);
+            System.Windows.Forms.Application.Run(view);
         }
 
         private void LoadTables()
@@ -122,15 +123,17 @@ namespace DDic.Controllers
         {
             var grid = sender as DataGridView;
             if (grid == null) return;
-            if (grid.CurrentRow == null) return;
+            if (grid.SelectedCells.Count == 0) return;
+
+            var row = grid.Rows[grid.SelectedCells[0].RowIndex];
 
             // 選択したテーブルの概要を概要欄に表示
-            var selectedDescription = grid.CurrentRow.Cells[Constants.TableColumns.Description].Value.ToString();
+            var selectedDescription = row.Cells[Constants.TableColumns.Description].Value.ToString();
             view.SetTextTableDescription(selectedDescription!);
 
             // 選択したテーブルのカラムに絞り込み
-            var selectedProjectName = grid.CurrentRow.Cells[Constants.TableColumns.ProjectName].Value.ToString();
-            var selectedTableID = grid.CurrentRow.Cells[Constants.TableColumns.TableID].Value.ToString();
+            var selectedProjectName = row.Cells[Constants.TableColumns.ProjectName].Value.ToString();
+            var selectedTableID = row.Cells[Constants.TableColumns.TableID].Value.ToString();
             columnBindingSource.Filter = $"{Constants.ColumnColumns.ProjectName} = '{selectedProjectName}' and {Constants.ColumnColumns.TableID} = '{selectedTableID}'";
         }
         #endregion
@@ -236,9 +239,9 @@ namespace DDic.Controllers
             if (grid == null) return;
             if (grid.SelectedCells.Count == 0) return;
 
-            var projectName = grid.CurrentRow.Cells[Constants.ColumnColumns.ProjectName].Value.ToString() ?? String.Empty;
-            var tableId = grid.CurrentRow.Cells[Constants.ColumnColumns.TableID].Value.ToString() ?? String.Empty;
-            var tableName = grid.CurrentRow.Cells[Constants.ColumnColumns.TableName].Value.ToString() ?? String.Empty;
+            var projectName = grid.Rows[grid.SelectedCells[0].RowIndex].Cells[Constants.ColumnColumns.ProjectName].Value.ToString() ?? String.Empty;
+            var tableId = grid.Rows[grid.SelectedCells[0].RowIndex].Cells[Constants.ColumnColumns.TableID].Value.ToString() ?? String.Empty;
+            var tableName = grid.Rows[grid.SelectedCells[0].RowIndex].Cells[Constants.ColumnColumns.TableName].Value.ToString() ?? String.Empty;
             var tableAlias = view.GetTextTableAliasValue().Trim();
 
             // SQLのSelect句から除外する列名
@@ -402,6 +405,54 @@ namespace DDic.Controllers
                     column.Width = width;
                 }
             }
+        }
+        #endregion
+
+        #region " カラム一覧でダブルクリック "
+        /// <summary>
+        /// カラム一覧でダブルクリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleColumnDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if (grid == null) return;
+            if (grid.CurrentRow == null) return;
+
+            var columnName = grid.Columns[e.ColumnIndex].Name;
+
+            void SearchCellSelect(string colName)
+            {
+                var cellValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+                if (string.IsNullOrEmpty(cellValue)) return;
+
+                // テーブル一覧該当列を探索して、一致する行を選択状態にする
+                foreach (DataGridViewRow row in view.GetGridTables().Rows)
+                {
+                    var targetCell = row.Cells[colName];
+                    if (targetCell?.Value?.ToString() == cellValue)
+                    {
+                        view.GetGridTables().ClearSelection();
+                        targetCell.Selected = true;
+
+                        // 一致した行を表示（スクロールして見える位置にする）
+                        view.GetGridTables().FirstDisplayedScrollingRowIndex = row.Index;
+                        return;
+                    }
+                }
+            }
+
+            switch (columnName)
+            {
+                case Constants.ColumnColumns.TableID:
+                    SearchCellSelect(Constants.TableColumns.TableID);
+                    break;
+                default:
+                    SearchCellSelect(Constants.TableColumns.TableName);
+                    break;
+            }
+
         }
         #endregion
 
