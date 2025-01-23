@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- 固定のメジャー・マイナーバージョン -->
     <MajorVersion>1</MajorVersion>
-    <MinorVersion>4</MinorVersion>
+    <MinorVersion>5</MinorVersion>
 
     <!-- 自動で日付と時刻を生成 -->
     <BuildDate>$([System.DateTime]::Now.ToString("yyyyMMdd"))</BuildDate>
