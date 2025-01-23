@@ -7,6 +7,7 @@ namespace DDic
     public partial class MainForm : Form
     {
         public event EventHandler? OnHandleTableSelected;
+        public event DataGridViewCellEventHandler? OnHandleColumnDoubleClick;
         public event EventHandler? OnHandleApplyFilters;
         public event EventHandler? OnHandleHandleSelectionDataToClipboard;
         public event EventHandler? OnHandleSelectStatementToClipboard;
@@ -21,11 +22,12 @@ namespace DDic
             GridColumns.CellBeginEdit += GridColumns_CellBeginEdit;
             ButtonClearFiltter.Click += ButtonClearFiltter_Click;
 
-            GridTables.SelectionChanged += (s, e) => OnHandleTableSelected?.Invoke(this.GridTables, EventArgs.Empty);
-            TextTableName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextColumnName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
-            TextColumnDetail.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(this, EventArgs.Empty);
+            GridTables.SelectionChanged += (s, e) => OnHandleTableSelected?.Invoke(s, e);
+            GridColumns.CellDoubleClick += (s, e) => OnHandleColumnDoubleClick?.Invoke(s, e);
+            TextTableName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
+            TextProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
+            TextColumnName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
+            TextColumnDetail.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
 
             // DataGridViewのソート停止
             foreach (DataGridViewColumn column in GridTables.Columns)
@@ -153,5 +155,6 @@ namespace DDic
             TextColumnName.Text = string.Empty;
             TextColumnDetail.Text = string.Empty;
         }
+
     }
 }
