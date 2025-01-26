@@ -92,8 +92,6 @@ namespace DDic
         public static class IniMain
         {
             public const string section = "Window_Setting";
-            public const string x = "X";
-            public const string y = "Y";
             public const string width = "Width";
             public const string height = "Height";
             public const string maximized = "Maximized";

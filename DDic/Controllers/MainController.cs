@@ -305,12 +305,10 @@ namespace DDic.Controllers
         }
         #endregion
 
-        #region " ウィンドウサイズ・位置の保存 "
+        #region " ウィンドウサイズの保存 "
         private void HandleSaveWindowSettings(object? sender, EventArgs e)
         {
-            // viewの位置とサイズを保存
-            iniController.Set(Constants.IniMain.section, Constants.IniMain.x, view.Location.X);
-            iniController.Set(Constants.IniMain.section, Constants.IniMain.y, view.Location.Y);
+            // viewのサイズを保存
             iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
@@ -347,12 +345,10 @@ namespace DDic.Controllers
         }
         #endregion
 
-        #region " ウィンドウサイズ・位置の読込 "
+        #region " ウィンドウサイズの読込 "
         private void HandleRestoreWindowSettings(object? sender, EventArgs e)
         {
-            // viewの位置とサイズ
-            int x = iniController.Get(Constants.IniMain.section, Constants.IniMain.x, 50);
-            int y = iniController.Get(Constants.IniMain.section, Constants.IniMain.y, 50);
+            // viewのサイズ
             int width = iniController.Get(Constants.IniMain.section, Constants.IniMain.width, 1274);
             int height = iniController.Get(Constants.IniMain.section, Constants.IniMain.height, 668);
             int splitDistance = iniController.Get(Constants.IniMain.section, Constants.IniMain.splitDistance, 350);
@@ -368,7 +364,6 @@ namespace DDic.Controllers
             else
             {
                 view.StartPosition = FormStartPosition.Manual;
-                view.Location = new System.Drawing.Point(x, y);
                 view.Size = new System.Drawing.Size(width, height);
             }
         }
