@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using DDic.Models;
 
-namespace DDic.Tests
+namespace DDic.Tests.Models
 {
     public class TsvReaderTests : IDisposable
     {
@@ -31,8 +31,8 @@ namespace DDic.Tests
 
             // Assert
             Assert.Equal(2, result.Count); // ヘッダーをスキップしているため、データ行は2行
-            Assert.Equal(new[] { "Data1", "Data2", "Data3" }, result[0]);
-            Assert.Equal(new[] { "Data4", "Data5", "Data6" }, result[1]);
+            Assert.Equal(["Data1", "Data2", "Data3"], result[0]);
+            Assert.Equal(["Data4", "Data5", "Data6"], result[1]);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace DDic.Tests
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(new[] { "Data1", "Data2", "Data3" }, result[0]);
-            Assert.Equal(new[] { "Data4", "Data5", "Data6" }, result[1]);
+            Assert.Equal(["Data1", "Data2", "Data3"], result[0]);
+            Assert.Equal(["Data4", "Data5", "Data6"], result[1]);
         }
 
         /// <summary>
@@ -75,8 +75,8 @@ namespace DDic.Tests
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(new[] { "Data1\nLine2", "Data2", "Data3" }, result[0]);
-            Assert.Equal(new[] { "Data4", "Data5", "Data6" }, result[1]);
+            Assert.Equal(["Data1\nLine2", "Data2", "Data3"], result[0]);
+            Assert.Equal(["Data4", "Data5", "Data6"], result[1]);
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace DDic.Tests
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(new[] { "Data1\"Data1-2", "Data2", "Data3" }, result[0]);
-            Assert.Equal(new[] { "Data4", "Data5", "Data6" }, result[1]);
+            Assert.Equal(["Data1\"Data1-2", "Data2", "Data3"], result[0]);
+            Assert.Equal(["Data4", "Data5", "Data6"], result[1]);
         }
 
         /// <summary>

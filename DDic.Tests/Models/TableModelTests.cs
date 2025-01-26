@@ -1,7 +1,7 @@
 using Xunit;
 using DDic.Models;
 
-namespace DDic.Tests
+namespace DDic.Tests.Models
 {
     public class TableModelTests
     {

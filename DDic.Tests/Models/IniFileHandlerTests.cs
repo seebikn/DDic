@@ -1,7 +1,8 @@
 ﻿using Xunit;
 using DDic.Models;
+using System.Data.Common;
 
-namespace DDic.Tests
+namespace DDic.Tests.Models
 {
     public class IniFileHandlerTests : IDisposable
     {
@@ -75,7 +76,9 @@ namespace DDic.Tests
         {
             // Arrange
             if (File.Exists(testIniFilePath))
+            {
                 File.Delete(testIniFilePath);
+            }
 
             // Act
             bool exists = iniFileHandler.FileExists();
