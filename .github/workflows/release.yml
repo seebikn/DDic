@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: チェックアウトリポジトリ
@@ -28,6 +28,7 @@ jobs:
         run: dotnet publish --configuration Release
 
       - name: リリース用アーティファクトの作成
+        uses: milliewalky/setup-7-zip@v2
         run: |
           mkdir release
           cp -r ./DDic/bin/Release/net8.0-windows/* ./release/
@@ -35,7 +36,7 @@ jobs:
           cp LICENSE ./release/
           cp -r ./image ./release/image
           cd release
-          zip -r ../DDic.zip ./*
+          7z a ..DDic.zip ./*
         shell: bash
 
       - name: リリースの作成
