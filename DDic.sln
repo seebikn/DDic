@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDic", "DDic\DDic.csproj", "{59C84958-1924-42D4-81E8-F86656AE319E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDic.Tests", "DDic.Tests\DDic.Tests.csproj", "{DEF18685-C36F-46D3-9DDC-0EE25E7A7C87}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59C84958-1924-42D4-81E8-F86656AE319E} = {59C84958-1924-42D4-81E8-F86656AE319E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{59C84958-1924-42D4-81E8-F86656AE319E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59C84958-1924-42D4-81E8-F86656AE319E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59C84958-1924-42D4-81E8-F86656AE319E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF18685-C36F-46D3-9DDC-0EE25E7A7C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF18685-C36F-46D3-9DDC-0EE25E7A7C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF18685-C36F-46D3-9DDC-0EE25E7A7C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF18685-C36F-46D3-9DDC-0EE25E7A7C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -43,7 +43,7 @@
                     {
                         if (row.Length != columnNum)
                         {
-                            throw new FormatException($"行 {lineNumber}: 列数が3列ではありません (列数: {row.Length})");
+                            throw new InvalidDataException($"行 {lineNumber}: 列数が3列ではありません (列数: {row.Length})");
                         }
 
                         rows.Add(row);
@@ -53,7 +53,7 @@
                 // ファイル終了後に引用符が閉じられていない場合はエラー
                 if (inQuotes)
                 {
-                    throw new FormatException($"ファイルの終端で引用符が閉じられていません");
+                    throw new InvalidDataException($"ファイルの終端で引用符が閉じられていません");
                 }
             }
 
