@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using DDic.Models;
 
 namespace DDic.Controllers
@@ -18,6 +19,7 @@ namespace DDic.Controllers
             view.OnHandleTableSelected += HandleTableSelected;
             view.OnHandleColumnDoubleClick += HandleColumnDoubleClick;
             view.OnHandleApplyFilters += HandleApplyFilters;
+            view.OnHandleHandleFontChange += HandleFontChange;
             view.OnHandleHandleSelectionDataToClipboard += HandleSelectionDataToClipboard;
             view.OnHandleSelectStatementToClipboard += HandleSelectStatementToClipboard;
             view.OnHandleSelectStatementToClipboardA5 += HandleSelectStatementToClipboardA5;
@@ -101,15 +103,15 @@ namespace DDic.Controllers
             iniController.InitializeFile();
 
             // テーブル一覧 右クリックメニューの表示設定
-            view.SetMenuTablesVisible(Constants.MenuTables.Copy, 
+            view.SetMenuTablesVisible(Constants.MenuTables.Copy,
                 iniController.Get(Constants.IniTableGrid.section, Constants.IniTableGrid.copyVisible, true));
 
             // カラム一覧 右クリックメニューの表示設定
-            view.SetMenuColumnsVisible(Constants.MenuColumns.Copy, 
-                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.copyVisible, true));            
-            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect, 
+            view.SetMenuColumnsVisible(Constants.MenuColumns.Copy,
+                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.copyVisible, true));
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect,
                 iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlVisible, true));
-            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5, 
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5,
                 iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlA5m2Visible, true));
         }
 
@@ -181,6 +183,27 @@ namespace DDic.Controllers
 
             tableBindingSource.Filter = string.Join(" and ", searchTable);
             columnBindingSource.Filter = string.Join(" and ", searchColumn);
+        }
+        #endregion
+
+        #region " 右クリック：フォント変更 "
+        private void HandleFontChange(object? sender, EventArgs e)
+        {
+            var currentFont = view.GetGridTables().Font;
+
+            using (FontDialog fontDialog = new FontDialog())
+            {
+                fontDialog.Font = currentFont;
+                if (fontDialog.ShowDialog() == DialogResult.OK)
+                {
+                    ApplyFont(fontDialog.Font);
+                }
+            }
+        }
+        private void ApplyFont(Font font)
+        {
+            view.GetGridTables().Font = font;
+            view.GetGridColumns().Font = font;
         }
         #endregion
 
@@ -312,7 +335,8 @@ namespace DDic.Controllers
             iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
-            iniController.Set(Constants.IniMain.section, Constants.IniMain.splitDistance, view.SplitterDistance);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.fontName, view.GetGridTables().Font.Name);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.fontSize, view.GetGridTables().Font.Size);
         }
 
         private void HandleSaveGridSettings(object? sender, EventArgs e)
@@ -354,18 +378,22 @@ namespace DDic.Controllers
             int splitDistance = iniController.Get(Constants.IniMain.section, Constants.IniMain.splitDistance, 350);
             bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
 
-            view.SplitterDistance = splitDistance;
+            string fontName = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontName, "Yu Gothic UI");
+            float fontSize = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontSize, 9);
 
             if (isMaximized)
             {
                 // 最大化
                 view.WindowState = FormWindowState.Maximized;
-            } 
+            }
             else
             {
                 view.StartPosition = FormStartPosition.Manual;
                 view.Size = new System.Drawing.Size(width, height);
             }
+
+            view.SplitterDistance = splitDistance;
+            ApplyFont(new Font(fontName, fontSize));
         }
 
         private void HandleRestoreGridSettings(object? sender, EventArgs e)
@@ -390,7 +418,7 @@ namespace DDic.Controllers
 
                 column.DisplayIndex = index;
                 column.Visible = visible;
-        
+
                 if (width == -1)
                 {
                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

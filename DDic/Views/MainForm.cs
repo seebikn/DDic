@@ -9,6 +9,7 @@ namespace DDic
         public event EventHandler? OnHandleTableSelected;
         public event DataGridViewCellEventHandler? OnHandleColumnDoubleClick;
         public event EventHandler? OnHandleApplyFilters;
+        public event EventHandler? OnHandleHandleFontChange;
         public event EventHandler? OnHandleHandleSelectionDataToClipboard;
         public event EventHandler? OnHandleSelectStatementToClipboard;
         public event EventHandler? OnHandleSelectStatementToClipboardA5;
@@ -39,17 +40,27 @@ namespace DDic
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
 
+            #region " フォーム　右クリックメニュー設定 "
+            var tsmiFont = new ToolStripMenuItem
+            {
+                Name = Constants.MenuForm.FontChange,
+                Text = Constants.MenuForm.FontChangeText,
+            };
+            MenuForm.Items.AddRange(new ToolStripItem[] { tsmiFont });
+            MenuForm.Items[tsmiFont.Name]!.Click += (s, e) => OnHandleHandleFontChange?.Invoke(this, EventArgs.Empty);
+            #endregion
+
             #region " テーブル一覧　右クリックメニュー設定 "
-            // テーブル一覧
-            var tsmiTableCopy = new ToolStripMenuItem();
-            tsmiTableCopy.Name = Constants.MenuTables.Copy;
-            tsmiTableCopy.Text = Constants.MenuTables.CopyText;
+            var tsmiTableCopy = new ToolStripMenuItem
+            {
+                Name = Constants.MenuTables.Copy,
+                Text = Constants.MenuTables.CopyText,
+            };
             MenuTables.Items.AddRange(new ToolStripItem[] { tsmiTableCopy });
             MenuTables.Items[tsmiTableCopy.Name]!.Click += (s, e) => OnHandleHandleSelectionDataToClipboard?.Invoke(this.GridTables, EventArgs.Empty);
             #endregion
 
             #region " カラム一覧　右クリックメニュー設定 "
-            // カラム一覧
             var tsmiColumnCopy = new ToolStripMenuItem
             {
                 Name = Constants.MenuColumns.Copy,
