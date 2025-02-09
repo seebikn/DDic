@@ -8,10 +8,10 @@ namespace DDic.Controllers
 {
     internal class MainController
     {
-        private MainForm view;
-        private IniController iniController;
-        private BindingSource tableBindingSource = new BindingSource();
-        private BindingSource columnBindingSource = new BindingSource();
+        private readonly MainForm view;
+        private readonly IniController iniController;
+        private readonly BindingSource tableBindingSource = [];
+        private readonly BindingSource columnBindingSource = [];
 
         public MainController(string iniFilePath)
         {
@@ -62,8 +62,8 @@ namespace DDic.Controllers
             // Resourcesからtsvデータの読み込み
             string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string resourcesDirectory = Path.Combine(appDirectory, Constants.resources);
-            DataTable tables = new DataTable();
-            DataTable columns = new DataTable();
+            DataTable tables = new();
+            DataTable columns = new();
             LoadData(resourcesDirectory, tables, columns);
 
             // データバインド
@@ -71,7 +71,7 @@ namespace DDic.Controllers
             columnBindingSource.DataSource = columns;
             view.SetDataSource(tableBindingSource, columnBindingSource);
 
-            void LoadData(string directoryPath, DataTable tables, DataTable columns)
+            static void LoadData(string directoryPath, DataTable tables, DataTable columns)
             {
                 // talbeファイル
                 var tableFiles = Directory.GetFiles(directoryPath, "table*.tsv");
@@ -90,7 +90,7 @@ namespace DDic.Controllers
                 }
 
                 // ファイルパスからプロジェクト名を取得
-                string GetProjectName(string filePath, string baseName)
+                static string GetProjectName(string filePath, string baseName)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
                     return fileName == baseName ? " " : fileName.Replace($"{baseName}", "");
@@ -123,8 +123,7 @@ namespace DDic.Controllers
         /// <param name="e"></param>
         private void HandleTableSelected(object? sender, EventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.SelectedCells.Count == 0) return;
 
             var row = grid.Rows[grid.SelectedCells[0].RowIndex];
@@ -148,8 +147,8 @@ namespace DDic.Controllers
             var columnName = view.GetTextColumnNameValue().Trim();
             var columnDetail = view.GetTextColumnDetailValue();
 
-            List<string> searchTable = new List<string>();
-            List<string> searchColumn = new List<string>();
+            List<string> searchTable = [];
+            List<string> searchColumn = [];
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -191,7 +190,7 @@ namespace DDic.Controllers
         {
             var currentFont = view.GetGridTables().Font;
 
-            using (FontDialog fontDialog = new FontDialog())
+            using (FontDialog fontDialog = new())
             {
                 fontDialog.Font = currentFont;
                 if (fontDialog.ShowDialog() == DialogResult.OK)
@@ -210,8 +209,7 @@ namespace DDic.Controllers
         #region " 右クリック：選択項目をクリップボードへコピー "
         private void HandleSelectionDataToClipboard(object? sender, EventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (!(grid.SelectedCells.Count > 0)) return;
 
             // 選択されたセルを行単位でグループ化
@@ -258,8 +256,7 @@ namespace DDic.Controllers
 
         private void HandleSelectStatementToClipboardCommon(object? sender, EventArgs e, bool a5m2)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.SelectedCells.Count == 0) return;
 
             var projectName = grid.Rows[grid.SelectedCells[0].RowIndex].Cells[Constants.ColumnColumns.ProjectName].Value.ToString() ?? String.Empty;
@@ -296,7 +293,7 @@ namespace DDic.Controllers
                 })
                 .ToList();
 
-            if (!columns.Any())
+            if (columns.Count == 0)
             {
                 return;
             }
@@ -439,8 +436,7 @@ namespace DDic.Controllers
         /// <param name="e"></param>
         private void HandleColumnDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.CurrentRow == null) return;
 
             var columnName = grid.Columns[e.ColumnIndex].Name;

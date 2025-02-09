@@ -8,7 +8,7 @@ namespace DDic.Models
     public class IniFileHandler
     {
         private readonly string filePath;
-        private readonly Dictionary<string, Dictionary<string, string>> data = new();
+        private readonly Dictionary<string, Dictionary<string, string>> data = [];
 
         public IniFileHandler(string path)
         {
@@ -26,22 +26,22 @@ namespace DDic.Models
             data.Clear();
             string currentSection = "";
             Encoding encoding = new UTF8Encoding(true); // BOM付きUTF-8
-            using (StreamReader reader = new StreamReader(filePath, encoding))
+            using (StreamReader reader = new(filePath, encoding))
             {
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine()!.Trim();
-                    if (string.IsNullOrEmpty(line) || line.StartsWith(";")) continue;
+                    if (string.IsNullOrEmpty(line) || line.StartsWith(';')) continue;
 
-                    if (line.StartsWith("[") && line.EndsWith("]"))
+                    if (line.StartsWith('[') && line.EndsWith(']'))
                     {
                         currentSection = line[1..^1];
                         if (!data.ContainsKey(currentSection))
                         {
-                            data[currentSection] = new Dictionary<string, string>();
+                            data[currentSection] = [];
                         }
                     }
-                    else if (line.Contains("="))
+                    else if (line.Contains('='))
                     {
                         string[] parts = line.Split('=', 2);
                         string key = parts[0].Trim();
@@ -66,7 +66,7 @@ namespace DDic.Models
         {
             if (!data.ContainsKey(section))
             {
-                data[section] = new Dictionary<string, string>();
+                data[section] = [];
             }
             data[section][key] = value;
             Save();
@@ -75,7 +75,7 @@ namespace DDic.Models
         private void Save()
         {
             Encoding encoding = new UTF8Encoding(true); // BOM付きUTF-8
-            using (StreamWriter writer = new StreamWriter(filePath, false, encoding))
+            using (StreamWriter writer = new(filePath, false, encoding))
             {
                 foreach (var section in data)
                 {
