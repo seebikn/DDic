@@ -10,7 +10,7 @@ namespace DDic
     public static class Constants
     {
         // リソースフォルダ
-        public static string resources = "Resources";
+        public const string resources = "Resources";
 
         /// <summary>
         /// テーブル一覧の列名を定義する構造体
@@ -87,6 +87,15 @@ namespace DDic
         }
 
         /// <summary>
+        /// フォームの右クリックメニューを定義する構造体
+        /// </summary>
+        public static class MenuForm
+        {
+            public const string FontChange = "FontChange";
+            public const string FontChangeText = "フォント変更";
+        }
+
+        /// <summary>
         /// ウィンドウの表示設定(config.ini)
         /// </summary>
         public static class IniMain
@@ -96,6 +105,8 @@ namespace DDic
             public const string height = "Height";
             public const string maximized = "Maximized";
             public const string splitDistance = "SplitDistance";
+            public const string fontName = "FontName";
+            public const string fontSize = "FontSize";
         }
 
         /// <summary>

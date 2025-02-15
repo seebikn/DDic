@@ -35,6 +35,7 @@
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
             ButtonClearFiltter = new Button();
@@ -70,6 +71,7 @@
             TextTableDescription = new TextBox();
             label1 = new Label();
             TextTableAlias = new TextBox();
+            MenuForm = new ContextMenuStrip(components);
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -195,9 +197,10 @@
             GridTables.AllowUserToDeleteRows = false;
             GridTables.AllowUserToOrderColumns = true;
             GridTables.AllowUserToResizeRows = false;
+            GridTables.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Yu Gothic UI", 9F);
+            dataGridViewCellStyle1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 128);
             dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
@@ -262,6 +265,14 @@
             GridColumns.AllowUserToOrderColumns = true;
             GridColumns.AllowUserToResizeRows = false;
             GridColumns.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            GridColumns.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             GridColumns.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             GridColumns.Columns.AddRange(new DataGridViewColumn[] { ParentProjectName, ParentTableID, ParentTableName, ColumnNo, PhysicalName, LogicalName, PrimaryKey, NotNullable, DataType, DataSize, Remarks });
             GridColumns.ContextMenuStrip = MenuColumns;
@@ -277,8 +288,8 @@
             // ParentProjectName
             // 
             ParentProjectName.DataPropertyName = "ParentProjectName";
-            dataGridViewCellStyle3.BackColor = SystemColors.InactiveBorder;
-            ParentProjectName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.BackColor = SystemColors.InactiveBorder;
+            ParentProjectName.DefaultCellStyle = dataGridViewCellStyle4;
             ParentProjectName.HeaderText = " ";
             ParentProjectName.Name = "ParentProjectName";
             ParentProjectName.ReadOnly = true;
@@ -287,8 +298,8 @@
             // ParentTableID
             // 
             ParentTableID.DataPropertyName = "ParentTableID";
-            dataGridViewCellStyle4.BackColor = SystemColors.InactiveBorder;
-            ParentTableID.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle5.BackColor = SystemColors.InactiveBorder;
+            ParentTableID.DefaultCellStyle = dataGridViewCellStyle5;
             ParentTableID.HeaderText = "テーブルID";
             ParentTableID.Name = "ParentTableID";
             ParentTableID.ReadOnly = true;
@@ -297,8 +308,8 @@
             // ParentTableName
             // 
             ParentTableName.DataPropertyName = "ParentTableName";
-            dataGridViewCellStyle5.BackColor = SystemColors.InactiveBorder;
-            ParentTableName.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.BackColor = SystemColors.InactiveBorder;
+            ParentTableName.DefaultCellStyle = dataGridViewCellStyle6;
             ParentTableName.HeaderText = "テーブル名";
             ParentTableName.Name = "ParentTableName";
             ParentTableName.ReadOnly = true;
@@ -372,8 +383,8 @@
             // 
             Remarks.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Remarks.DataPropertyName = "Remarks";
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            Remarks.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
+            Remarks.DefaultCellStyle = dataGridViewCellStyle7;
             Remarks.HeaderText = "備考";
             Remarks.Name = "Remarks";
             Remarks.ReadOnly = true;
@@ -419,11 +430,17 @@
             TextTableAlias.Size = new Size(58, 23);
             TextTableAlias.TabIndex = 2;
             // 
+            // MenuForm
+            // 
+            MenuForm.Name = "MenuForm";
+            MenuForm.Size = new Size(61, 4);
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1258, 629);
+            ContextMenuStrip = MenuForm;
             Controls.Add(TextTableAlias);
             Controls.Add(label1);
             Controls.Add(groupBox2);
@@ -483,5 +500,6 @@
         private DataGridViewTextBoxColumn Remarks;
         private DoubleBufferedDataGridView GridTables;
         private DoubleBufferedDataGridView GridColumns;
+        private ContextMenuStrip MenuForm;
     }
 }
