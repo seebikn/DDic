@@ -1,16 +1,17 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using DDic.Models;
 
 namespace DDic.Controllers
 {
     internal class MainController
     {
-        private MainForm view;
-        private IniController iniController;
-        private BindingSource tableBindingSource = new BindingSource();
-        private BindingSource columnBindingSource = new BindingSource();
+        private readonly MainForm view;
+        private readonly IniController iniController;
+        private readonly BindingSource tableBindingSource = [];
+        private readonly BindingSource columnBindingSource = [];
 
         public MainController(string iniFilePath)
         {
@@ -18,6 +19,7 @@ namespace DDic.Controllers
             view.OnHandleTableSelected += HandleTableSelected;
             view.OnHandleColumnDoubleClick += HandleColumnDoubleClick;
             view.OnHandleApplyFilters += HandleApplyFilters;
+            view.OnHandleHandleFontChange += HandleFontChange;
             view.OnHandleHandleSelectionDataToClipboard += HandleSelectionDataToClipboard;
             view.OnHandleSelectStatementToClipboard += HandleSelectStatementToClipboard;
             view.OnHandleSelectStatementToClipboardA5 += HandleSelectStatementToClipboardA5;
@@ -60,8 +62,8 @@ namespace DDic.Controllers
             // Resourcesからtsvデータの読み込み
             string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string resourcesDirectory = Path.Combine(appDirectory, Constants.resources);
-            DataTable tables = new DataTable();
-            DataTable columns = new DataTable();
+            DataTable tables = new();
+            DataTable columns = new();
             LoadData(resourcesDirectory, tables, columns);
 
             // データバインド
@@ -69,7 +71,7 @@ namespace DDic.Controllers
             columnBindingSource.DataSource = columns;
             view.SetDataSource(tableBindingSource, columnBindingSource);
 
-            void LoadData(string directoryPath, DataTable tables, DataTable columns)
+            static void LoadData(string directoryPath, DataTable tables, DataTable columns)
             {
                 // talbeファイル
                 var tableFiles = Directory.GetFiles(directoryPath, "table*.tsv");
@@ -88,7 +90,7 @@ namespace DDic.Controllers
                 }
 
                 // ファイルパスからプロジェクト名を取得
-                string GetProjectName(string filePath, string baseName)
+                static string GetProjectName(string filePath, string baseName)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
                     return fileName == baseName ? " " : fileName.Replace($"{baseName}", "");
@@ -101,15 +103,15 @@ namespace DDic.Controllers
             iniController.InitializeFile();
 
             // テーブル一覧 右クリックメニューの表示設定
-            view.SetMenuTablesVisible(Constants.MenuTables.Copy, 
+            view.SetMenuTablesVisible(Constants.MenuTables.Copy,
                 iniController.Get(Constants.IniTableGrid.section, Constants.IniTableGrid.copyVisible, true));
 
             // カラム一覧 右クリックメニューの表示設定
-            view.SetMenuColumnsVisible(Constants.MenuColumns.Copy, 
-                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.copyVisible, true));            
-            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect, 
+            view.SetMenuColumnsVisible(Constants.MenuColumns.Copy,
+                iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.copyVisible, true));
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelect,
                 iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlVisible, true));
-            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5, 
+            view.SetMenuColumnsVisible(Constants.MenuColumns.SqlSelectA5,
                 iniController.Get(Constants.IniColumnGrid.section, Constants.IniColumnGrid.createSqlA5m2Visible, true));
         }
 
@@ -121,8 +123,7 @@ namespace DDic.Controllers
         /// <param name="e"></param>
         private void HandleTableSelected(object? sender, EventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.SelectedCells.Count == 0) return;
 
             var row = grid.Rows[grid.SelectedCells[0].RowIndex];
@@ -146,8 +147,8 @@ namespace DDic.Controllers
             var columnName = view.GetTextColumnNameValue().Trim();
             var columnDetail = view.GetTextColumnDetailValue();
 
-            List<string> searchTable = new List<string>();
-            List<string> searchColumn = new List<string>();
+            List<string> searchTable = [];
+            List<string> searchColumn = [];
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -184,11 +185,31 @@ namespace DDic.Controllers
         }
         #endregion
 
+        #region " 右クリック：フォント変更 "
+        private void HandleFontChange(object? sender, EventArgs e)
+        {
+            var currentFont = view.GetGridTables().Font;
+
+            using (FontDialog fontDialog = new())
+            {
+                fontDialog.Font = currentFont;
+                if (fontDialog.ShowDialog() == DialogResult.OK)
+                {
+                    ApplyFont(fontDialog.Font);
+                }
+            }
+        }
+        private void ApplyFont(Font font)
+        {
+            view.GetGridTables().Font = font;
+            view.GetGridColumns().Font = font;
+        }
+        #endregion
+
         #region " 右クリック：選択項目をクリップボードへコピー "
         private void HandleSelectionDataToClipboard(object? sender, EventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (!(grid.SelectedCells.Count > 0)) return;
 
             // 選択されたセルを行単位でグループ化
@@ -235,8 +256,7 @@ namespace DDic.Controllers
 
         private void HandleSelectStatementToClipboardCommon(object? sender, EventArgs e, bool a5m2)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.SelectedCells.Count == 0) return;
 
             var projectName = grid.Rows[grid.SelectedCells[0].RowIndex].Cells[Constants.ColumnColumns.ProjectName].Value.ToString() ?? String.Empty;
@@ -273,7 +293,7 @@ namespace DDic.Controllers
                 })
                 .ToList();
 
-            if (!columns.Any())
+            if (columns.Count == 0)
             {
                 return;
             }
@@ -312,7 +332,8 @@ namespace DDic.Controllers
             iniController.Set(Constants.IniMain.section, Constants.IniMain.width, view.Width);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.height, view.Height);
             iniController.Set(Constants.IniMain.section, Constants.IniMain.maximized, view.WindowState == FormWindowState.Maximized);
-            iniController.Set(Constants.IniMain.section, Constants.IniMain.splitDistance, view.SplitterDistance);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.fontName, view.GetGridTables().Font.Name);
+            iniController.Set(Constants.IniMain.section, Constants.IniMain.fontSize, view.GetGridTables().Font.Size);
         }
 
         private void HandleSaveGridSettings(object? sender, EventArgs e)
@@ -354,18 +375,22 @@ namespace DDic.Controllers
             int splitDistance = iniController.Get(Constants.IniMain.section, Constants.IniMain.splitDistance, 350);
             bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
 
-            view.SplitterDistance = splitDistance;
+            string fontName = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontName, "Yu Gothic UI");
+            float fontSize = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontSize, 9);
 
             if (isMaximized)
             {
                 // 最大化
                 view.WindowState = FormWindowState.Maximized;
-            } 
+            }
             else
             {
                 view.StartPosition = FormStartPosition.Manual;
                 view.Size = new System.Drawing.Size(width, height);
             }
+
+            view.SplitterDistance = splitDistance;
+            ApplyFont(new Font(fontName, fontSize));
         }
 
         private void HandleRestoreGridSettings(object? sender, EventArgs e)
@@ -390,7 +415,7 @@ namespace DDic.Controllers
 
                 column.DisplayIndex = index;
                 column.Visible = visible;
-        
+
                 if (width == -1)
                 {
                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -411,8 +436,7 @@ namespace DDic.Controllers
         /// <param name="e"></param>
         private void HandleColumnDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
-            var grid = sender as DataGridView;
-            if (grid == null) return;
+            if (sender is not DataGridView grid) return;
             if (grid.CurrentRow == null) return;
 
             var columnName = grid.Columns[e.ColumnIndex].Name;

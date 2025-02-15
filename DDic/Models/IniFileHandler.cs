@@ -1,38 +1,93 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DDic.Models
 {
-    internal class IniFileHandler
+    public class IniFileHandler
     {
-        private string filePath;
+        private readonly string filePath;
+        private readonly Dictionary<string, Dictionary<string, string>> data = [];
 
-        public IniFileHandler(string filePath)
+        public IniFileHandler(string path)
         {
-            this.filePath = filePath;
+            filePath = path;
+            Load();
         }
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        private static extern int GetPrivateProfileString(string section, string key, string defaultValue, StringBuilder result, int size, string filePath);
-
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        private static extern long WritePrivateProfileString(string section, string key, string value, string filePath);
-
-        public string ReadValue(string section, string key)
+        private void Load()
         {
-            StringBuilder result = new StringBuilder(2048);
-            GetPrivateProfileString(section, key, "", result, result.Capacity, filePath);
-            return result.ToString();
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            data.Clear();
+            string currentSection = "";
+            Encoding encoding = new UTF8Encoding(true); // BOM付きUTF-8
+            using (StreamReader reader = new(filePath, encoding))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine()!.Trim();
+                    if (string.IsNullOrEmpty(line) || line.StartsWith(';')) continue;
+
+                    if (line.StartsWith('[') && line.EndsWith(']'))
+                    {
+                        currentSection = line[1..^1];
+                        if (!data.ContainsKey(currentSection))
+                        {
+                            data[currentSection] = [];
+                        }
+                    }
+                    else if (line.Contains('='))
+                    {
+                        string[] parts = line.Split('=', 2);
+                        string key = parts[0].Trim();
+                        string value = parts[1].Trim();
+                        if (!string.IsNullOrEmpty(currentSection))
+                        {
+                            data[currentSection][key] = value;
+                        }
+                    }
+                }
+            }
         }
 
-        public void WriteValue(string section, string key, string? value)
+        public string ReadValue(string section, string key, string defaultValue = "")
         {
-            WritePrivateProfileString(section, key, value??"", filePath);
+            return data.ContainsKey(section) && data[section].ContainsKey(key)
+                ? data[section][key]
+                : defaultValue;
         }
 
+        public void WriteValue(string section, string key, string value)
+        {
+            if (!data.ContainsKey(section))
+            {
+                data[section] = [];
+            }
+            data[section][key] = value;
+            Save();
+        }
+
+        private void Save()
+        {
+            Encoding encoding = new UTF8Encoding(true); // BOM付きUTF-8
+            using (StreamWriter writer = new(filePath, false, encoding))
+            {
+                foreach (var section in data)
+                {
+                    writer.WriteLine($"[{section.Key}]");
+                    foreach (var kvp in section.Value)
+                    {
+                        writer.WriteLine($"{kvp.Key}={kvp.Value}");
+                    }
+                    writer.WriteLine();
+                }
+            }
+        }
         public bool FileExists()
         {
             return File.Exists(filePath);

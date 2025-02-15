@@ -4,7 +4,7 @@ namespace DDic.Controllers
 {
     internal class IniController
     {
-        private IniFileHandler iniFileHandler;
+        private readonly IniFileHandler iniFileHandler;
 
         public IniController(string iniFilePath)
         {
@@ -26,7 +26,7 @@ namespace DDic.Controllers
 
         private void Set(string section, string key, string? value)
         {
-            iniFileHandler.WriteValue(section, key, value);
+            iniFileHandler.WriteValue(section, key, value ?? "");
         }
 
         public T Get<T>(string section, string key, T defaultValue = default!)
@@ -51,5 +51,6 @@ namespace DDic.Controllers
         {
             Set(section, key, value?.ToString());
         }
+
     }
 }
