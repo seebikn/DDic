@@ -45,15 +45,21 @@ jobs:
           dotnet publish -p:PublishProfile=win-arm64 -p:Version=${{ env.VERSION }}  -p:AssemblyVersion=${{ env.VERSION }} -p:FileVersion=${{ env.VERSION }}
 
       # ライセンスやreadmeをコピー
-      - name: File Copy
+      - name: File Copy win-x86
         continue-on-error: true
         run: |
           cp README.md ${{ env.WIN_X86 }}
           cp LICENSE ${{ env.WIN_X86 }}
           cp -R image ${{ env.WIN_X86 }}
+      - name: File Copy win-x64
+        continue-on-error: true
+        run: |
           cp README.md ${{ env.WIN_X64 }}
           cp LICENSE ${{ env.WIN_X64 }}
           cp -R image ${{ env.WIN_X64 }}
+      - name: File Copy win-arm64
+        continue-on-error: true
+        run: |
           cp README.md ${{ env.WIN_ARM64 }}
           cp LICENSE ${{ env.WIN_ARM64 }}
           cp -R image ${{ env.WIN_ARM64 }}
