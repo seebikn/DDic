@@ -1,0 +1,106 @@
+name: release
+
+# v*.* のタグがPushされた場合にこのワークフローは動作します
+on:
+  push:
+    tags:
+      - 'v*.*'
+        
+jobs:
+  build:
+    name: release-build
+    runs-on: windows-2022
+    steps:
+      - name: Set Variable
+        run: |
+          echo "WIN_X86=.\DDic\publish\win-x86\" >> "$env:GITHUB_ENV"
+          echo "WIN_X64=.\DDic\publish\win-x64\" >> "$env:GITHUB_ENV"
+          echo "WIN_ARM64=.\DDic\publish\win-arm64\" >> "$env:GITHUB_ENV"
+          echo "ZIPNAME_X86=DDic-x86-${{ github.ref_name }}.zip" >> "$env:GITHUB_ENV"
+          echo "ZIPNAME_X64=DDic-x64-${{ github.ref_name }}.zip" >> "$env:GITHUB_ENV"
+          echo "ZIPNAME_ARM64=DDic-arm64-${{ github.ref_name }}.zip" >> "$env:GITHUB_ENV"
+          Write-Output ("VERSION=" + ("${{ github.ref_name }}" -replace 'v', '')) >> "$env:GITHUB_ENV"
+
+      # リポジトリからファイルをチェックアウト
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      # .NET8.0 のセットアップをする
+      - name: Setup NuGet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      
+      # solution ファイルの状態を復元する
+      # (Windowsを対象とするプロジェクトをビルドする場合はEnableWindowsTargetingをtrueにする)
+      - name: Restore dependencies
+        run: dotnet restore /p:EnableWindowsTargeting=true
+        working-directory: .
+
+      # Releaseビルド実行
+      - name: Build solution
+        run: |
+          dotnet publish -p:PublishProfile=win-x86 -p:Version=${{ env.VERSION }}  -p:AssemblyVersion=${{ env.VERSION }} -p:FileVersion=${{ env.VERSION }}
+          dotnet publish -p:PublishProfile=win-x64 -p:Version=${{ env.VERSION }}  -p:AssemblyVersion=${{ env.VERSION }} -p:FileVersion=${{ env.VERSION }}
+          dotnet publish -p:PublishProfile=win-arm64 -p:Version=${{ env.VERSION }}  -p:AssemblyVersion=${{ env.VERSION }} -p:FileVersion=${{ env.VERSION }}
+
+      # ライセンスやreadmeをコピー
+      - name: File Copy
+        continue-on-error: true
+        run: |
+          cp README.md ${{ env.WIN_X86 }}
+          cp LICENSE ${{ env.WIN_X86 }}
+          cp -R image ${{ env.WIN_X86 }}
+          cp README.md ${{ env.WIN_X64 }}
+          cp LICENSE ${{ env.WIN_X64 }}
+          cp -R image ${{ env.WIN_X64 }}
+          cp README.md ${{ env.WIN_ARM64 }}
+          cp LICENSE ${{ env.WIN_ARM64 }}
+          cp -R image ${{ env.WIN_ARM64 }}
+        
+      # ZIPファイルを作成する
+      - name: Archive win-x86
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: ${{ env.ZIPNAME_X86 }}
+          # アーカイブ対象パス
+          path: ${{ env.WIN_X86 }}\*
+          # ZIPファイル作成先
+          directory: .\
+      - name: Archive win-x64
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: ${{ env.ZIPNAME_X64 }}
+          # アーカイブ対象パス
+          path: ${{ env.WIN_X64 }}\*
+          # ZIPファイル作成先
+          directory: .\
+      - name: Archive win-arm64
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: ${{ env.ZIPNAME_ARM64 }}
+          # アーカイブ対象パス
+          path: ${{ env.WIN_ARM64 }}\*
+          # ZIPファイル作成先
+          directory: .\
+
+      # リリースを作成し、生成されたZIPファイルをアップロードする
+      - name: Create Release and Upload Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PRのタイトルと内容をRELEASE_TAGに設定する
+          RELEASE_TAG: ${{ github.event.pull_request.title }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.ZIPNAME_X86 }}
+            ${{ env.ZIPNAME_X64 }}
+            ${{ env.ZIPNAME_ARM64 }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TAG }}
+          draft: true
+          prerelease: false
+          body: "<!-- ！！リリース内容を編集すること！！ -->"
