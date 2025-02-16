@@ -38,9 +38,9 @@
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
+            ComboProjectName = new ComboBox();
             ButtonClearFiltter = new Button();
             TextColumnDetail = new TextBox();
-            TextProjectName = new TextBox();
             LabelColumnDetail = new Label();
             LabelProjectName = new Label();
             TextColumnName = new TextBox();
@@ -84,9 +84,9 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(ComboProjectName);
             groupBox1.Controls.Add(ButtonClearFiltter);
             groupBox1.Controls.Add(TextColumnDetail);
-            groupBox1.Controls.Add(TextProjectName);
             groupBox1.Controls.Add(LabelColumnDetail);
             groupBox1.Controls.Add(LabelProjectName);
             groupBox1.Controls.Add(TextColumnName);
@@ -99,6 +99,17 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "検索";
+            // 
+            // ComboProjectName
+            // 
+            ComboProjectName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            ComboProjectName.AutoCompleteSource = AutoCompleteSource.ListItems;
+            ComboProjectName.FormattingEnabled = true;
+            ComboProjectName.Location = new Point(299, 16);
+            ComboProjectName.MaxDropDownItems = 20;
+            ComboProjectName.Name = "ComboProjectName";
+            ComboProjectName.Size = new Size(156, 23);
+            ComboProjectName.TabIndex = 9;
             // 
             // ButtonClearFiltter
             // 
@@ -115,13 +126,6 @@
             TextColumnDetail.Name = "TextColumnDetail";
             TextColumnDetail.Size = new Size(156, 23);
             TextColumnDetail.TabIndex = 7;
-            // 
-            // TextProjectName
-            // 
-            TextProjectName.Location = new Point(299, 16);
-            TextProjectName.Name = "TextProjectName";
-            TextProjectName.Size = new Size(156, 23);
-            TextProjectName.TabIndex = 6;
             // 
             // LabelColumnDetail
             // 
@@ -472,7 +476,6 @@
         private TextBox TextTableName;
         private Label LabelColumnName;
         private TextBox TextColumnDetail;
-        private TextBox TextProjectName;
         private Label LabelColumnDetail;
         private Label LabelProjectName;
         private GroupBox groupBox2;
@@ -501,5 +504,6 @@
         private DoubleBufferedDataGridView GridTables;
         private DoubleBufferedDataGridView GridColumns;
         private ContextMenuStrip MenuForm;
+        private ComboBox ComboProjectName;
     }
 }

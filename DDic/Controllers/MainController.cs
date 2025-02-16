@@ -71,7 +71,7 @@ namespace DDic.Controllers
             columnBindingSource.DataSource = columns;
             view.SetDataSource(tableBindingSource, columnBindingSource);
 
-            static void LoadData(string directoryPath, DataTable tables, DataTable columns)
+            void LoadData(string directoryPath, DataTable tables, DataTable columns)
             {
                 // talbeファイル
                 var tableFiles = Directory.GetFiles(directoryPath, "table*.tsv");
@@ -87,6 +87,7 @@ namespace DDic.Controllers
                 {
                     string projectName = GetProjectName(file, "column-");
                     columns.Merge(DataLoader.LoadColumns(file, projectName, tables));
+                    view.SetCombo(projectName);
                 }
 
                 // ファイルパスからプロジェクト名を取得
