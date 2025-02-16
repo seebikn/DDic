@@ -26,7 +26,7 @@ namespace DDic
             GridTables.SelectionChanged += (s, e) => OnHandleTableSelected?.Invoke(s, e);
             GridColumns.CellDoubleClick += (s, e) => OnHandleColumnDoubleClick?.Invoke(s, e);
             TextTableName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
-            TextProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
+            ComboProjectName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
             TextColumnName.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
             TextColumnDetail.TextChanged += (s, e) => OnHandleApplyFilters?.Invoke(s, e);
 
@@ -107,7 +107,7 @@ namespace DDic
 
         public string GetTextProjectNameValue()
         {
-            return TextProjectName.Text;
+            return ComboProjectName.Text;
         }
 
         public string GetTextTableNameValue()
@@ -146,6 +146,10 @@ namespace DDic
             set => splitContainer1.SplitterDistance = value;
         }
 
+        public void SetComboProjectName(string name)
+        {
+            ComboProjectName.Items.Add(name);
+        }
 
         #endregion
 
@@ -161,7 +165,7 @@ namespace DDic
 
         private void ButtonClearFiltter_Click(object? sender, EventArgs e)
         {
-            TextProjectName.Text = string.Empty;
+            ComboProjectName.Text = string.Empty;
             TextTableName.Text = string.Empty;
             TextColumnName.Text = string.Empty;
             TextColumnDetail.Text = string.Empty;
