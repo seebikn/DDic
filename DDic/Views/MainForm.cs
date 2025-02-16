@@ -146,7 +146,7 @@ namespace DDic
             set => splitContainer1.SplitterDistance = value;
         }
 
-        public void SetCombo(string name)
+        public void SetComboProjectName(string name)
         {
             ComboProjectName.Items.Add(name);
         }

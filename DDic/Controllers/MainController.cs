@@ -87,7 +87,7 @@ namespace DDic.Controllers
                 {
                     string projectName = GetProjectName(file, "column-");
                     columns.Merge(DataLoader.LoadColumns(file, projectName, tables));
-                    view.SetCombo(projectName);
+                    view.SetComboProjectName(projectName);
                 }
 
                 // ファイルパスからプロジェクト名を取得
