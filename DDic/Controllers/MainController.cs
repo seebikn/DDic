@@ -377,7 +377,7 @@ namespace DDic.Controllers
             bool isMaximized = iniController.Get(Constants.IniMain.section, Constants.IniMain.maximized, false);
 
             string fontName = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontName, "Yu Gothic UI");
-            float fontSize = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontSize, 9);
+            float fontSize = iniController.Get(Constants.IniMain.section, Constants.IniMain.fontSize, 9f);
 
             if (isMaximized)
             {
