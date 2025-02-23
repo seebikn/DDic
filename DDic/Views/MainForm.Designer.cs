@@ -109,7 +109,7 @@
             ComboProjectName.MaxDropDownItems = 20;
             ComboProjectName.Name = "ComboProjectName";
             ComboProjectName.Size = new Size(156, 23);
-            ComboProjectName.TabIndex = 9;
+            ComboProjectName.TabIndex = 6;
             // 
             // ButtonClearFiltter
             // 
